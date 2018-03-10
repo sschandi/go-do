@@ -30,7 +30,7 @@ let router = new Router({
       }
     },
     {
-      path: '/task/:tasklist',
+      path: '/go/:tasklist',
       name: 'go-do',
       component: GoDo,
       meta: {

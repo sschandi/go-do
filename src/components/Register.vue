@@ -23,8 +23,6 @@ export default {
     register: function(e) {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
         .then(user => {
-          console.log(user.uid)
-          db.collection('users').doc(`${user.uid}`).set({tasks: "none"})
           alert(`Account created for ${user.email}`)
           this.$router.go({path: this.$router.path})
         },

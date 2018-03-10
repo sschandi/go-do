@@ -9,6 +9,9 @@
       <li v-if="isLoggedIn" class="nav-item">
         <router-link to="/dashboard" class="nav-link">Dashboard</router-link>
       </li>
+      <li v-if="isLoggedIn" class="nav-item">
+        <router-link to="/new" class="nav-link">New</router-link>
+      </li>
       <li v-if="!isLoggedIn" class="nav-item">
         <router-link to="/login" class="nav-link">Login</router-link>
       </li>
