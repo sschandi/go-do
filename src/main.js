@@ -5,8 +5,10 @@ import App from './App'
 import router from './router'
 import firebase from 'firebase'
 import './components/firebaseInit'
+import VueCircleSlider from 'vue-circle-slider'
 
 Vue.config.productionTip = false
+Vue.use(VueCircleSlider)
 
 let app
 firebase.auth().onAuthStateChanged(user => {

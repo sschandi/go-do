@@ -1,11 +1,11 @@
 <template>
-  <nav class="navbar navbar-expand-md navbar-light bg-light">
+  <nav class="navbar navbar-expand-md navbar-dark">
   <router-link to="/" class="navbar-brand">Go Do</router-link>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
+    <ul class="navbar-nav mr-auto">
       <li v-if="isLoggedIn" class="nav-item">
         <router-link to="/dashboard" class="nav-link">Dashboard</router-link>
       </li>
@@ -13,17 +13,12 @@
         <router-link to="/new" class="nav-link">New</router-link>
       </li>
       <li v-if="!isLoggedIn" class="nav-item">
-        <router-link to="/login" class="nav-link">Login</router-link>
-      </li>
-      <li v-if="!isLoggedIn" class="nav-item">
         <router-link to="/register" class="nav-link">Register</router-link>
       </li>
-      <li v-if="isLoggedIn" class="nav-item">
-        <a v-on:click="logout" class="nav-link">Logout</a>
-      </li>
-      <li v-if="isLoggedIn" class="nav-item">
-        {{currentUser}}
-      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <router-link v-if="!isLoggedIn" to="/login" class="btn btn-small btn-outline-success">Login</router-link>
+      <button v-if="isLoggedIn" class="btn btn-small btn-outline-danger ml-auto" v-on:click="logout">Logout</button>
     </ul>
   </div>
 </nav>
@@ -58,5 +53,10 @@ export default {
 </script>
 
 <style>
+.navbar {
 
+}
+.navbar-dark {
+  background-color: var(--main-bg-dark);
+}
 </style>
