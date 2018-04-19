@@ -9,7 +9,7 @@
         <div class="card completed-tasks mt-2 mb-2" :style="{'border-top': getColor()}">
           <div class="card-header">
             {{tasklist.listname}}
-            <router-link v-bind:to="{name: 'go-do', params: {tasklist: tasklist.id}}" class="btn">View</router-link>
+            <router-link v-bind:to="{name: 'go-do', params: {tasklist: tasklist.id}}" class="float-right">View</router-link>
           </div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item" v-for="task in tasklist.tasks">{{ task.name }}<span class="float-right">{{ getPrettyTime(task.duration) }}</span></li>

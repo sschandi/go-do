@@ -6,7 +6,14 @@
         <input type="text" class="form-control form-control-lg" v-model="listname" placeholder="Enter tasklist name">
       </div>
     </div>
-            
+
+    <div v-if="errors.length" class="container text-center">
+      <div class="error pt-2 pb-3">
+        <h4>Whoops</h4>
+        <p v-for="error in errors"> {{ error}}</p>
+      </div>
+    </div>
+
     <h2 class="text-center">Add New Task</h2>
     <div class="container new-task p-4 mb-4">
         <input type="text" class="form-control" v-model="task" placeholder="Enter task name">
@@ -63,8 +70,9 @@
             <ul class="list-group list-group-flush">
               <draggable :list="tasks" class="dragArea">
                 <li class="list-group-item" v-for="(task, index) in tasks">
-                  {{ task.name }} : {{ task.duration }} 
-                  <button class="btn btn-danger" v-on:click="deleteTask(index)">Delete</button>
+                  {{ task.name }} 
+                  <span class="float-right">{{getPrettyTime(task.duration)}}
+                  <a href="#" v-on:click="deleteTask(index)">Delete</a></span>
                 </li>
               </draggable>
             </ul>
@@ -96,33 +104,68 @@ export default {
       hours: 0,
       minutes: 0,
       seconds: 0,
-      tasks: []
+      tasks: [],
+      errors: []
     }
   },
   methods: {
     addTask: function() {
-      this.tasks.push({name: this.task, duration: this.duration})
-      this.task = ''
-      this.hours = 0
-      this.minutes = 0
-      this.seconds = 0
+      if (this.checkTask() == true) {
+        this.tasks.push({name: this.task, duration: this.duration})
+        this.task = ''
+        this.hours = 0
+        this.minutes = 0
+        this.seconds = 0
+      }
     },
     deleteTask: function(index) {
       this.tasks.splice(index, 1)
     },
     saveTasklist () {
-      let uid = firebase.auth().currentUser.uid
-      db.collection('users').doc(uid).collection('tasklists').add({
-        listname: this.listname,
-        tasks: this.tasks
-      })
-      .then(docRef => {
-        console.log('Tasklist added: ', docRef.id)
-        this.$router.push('/')
-      })
-      .catch(error => {
-        console.error('Error adding tasklist: ', error)
-      })
+      if (this.checkTaskList() == true) {
+        let uid = firebase.auth().currentUser.uid
+        db.collection('users').doc(uid).collection('tasklists').add({
+          listname: this.listname,
+          tasks: this.tasks
+        })
+        .then(docRef => {
+          console.log('Tasklist added: ', docRef.id)
+          this.$router.push('/')
+        })
+        .catch(error => {
+          console.error('Error adding tasklist: ', error)
+        })
+      }
+    },
+    checkTask: function() {
+      this.errors = []
+      if (!this.task) {
+        this.errors.push("Task name required.")
+      }
+      if ((this.hours + this.minutes + this.seconds) == 0) {
+        this.errors.push("You can't have a 0 duration task.")
+      }
+      if(!this.errors.length) {
+        return true
+      }
+    },
+    checkTaskList: function() {
+      this.errors = []
+      if (!this.listname) {
+        this.errors.push("Tasklist name required.")
+      }
+      if (!this.tasks.length) {
+        this.errors.push("You need atleast one task!")
+      }
+      if(!this.errors.length) {
+        return true
+      }
+    },
+    getPrettyTime: function(duration) {
+      let h = Math.floor(duration / 3600)
+      let m = Math.floor(duration % 3600 / 60)
+      let s = Math.floor(duration % 3600 % 60)
+      return ('0' + h).slice(-2) + ":" + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2)
     }
   },
   computed: {
@@ -138,5 +181,12 @@ export default {
   background-color: var(--main-bg-dark);
   border-radius: 5px;
 }
-
+.error {
+  background-color: var(--main-bg-dark);
+  border-radius: 5px;
+}
+.error p {
+  margin: 0;
+  color: #dc3545;
+}
 </style>

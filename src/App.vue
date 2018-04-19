@@ -50,6 +50,13 @@ input[type=text], input[type=text]:focus {
   background-color: var(--main-bg-dark);
   padding: 1em;
 }
+.card {
+  background-color: var(--main-bg-dark);
+  border-top: var(--main-blue) 2px solid;
+}
+.list-group-item {
+  background-color: var(--main-bg-dark);
+}
 .btn-main {
   background-color: var(--main-blue);
   border-color: var(--main-blue);
@@ -59,5 +66,12 @@ input[type=text], input[type=text]:focus {
     color: #fff;
     background-color: var(--main-blue-dark);
     border-color: var(--main-blue-dark); /*set the color you want here*/
+}
+a:link, a:visited {
+  color: var(--main-blue);
+}
+a:hover, a:active {
+  color: var(--main-blue-dark);
+  text-decoration: none;
 }
 </style>
