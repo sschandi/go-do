@@ -1,10 +1,14 @@
 <template>
   <div id="go-do-new">
-    <div class="container">
-      <h1>Go Do New</h1>
-      <input type="text" class="form-control" v-model="listname" placeholder="Enter tasklist name">
-
-        <label>Task</label>
+    <div class="title container-fluid text-center mb-3">
+      <h1>New Tasklist</h1>
+      <div class="container">
+        <input type="text" class="form-control form-control-lg" v-model="listname" placeholder="Enter tasklist name">
+      </div>
+    </div>
+            
+    <h2 class="text-center">Add New Task</h2>
+    <div class="container new-task p-4 mb-4">
         <input type="text" class="form-control" v-model="task" placeholder="Enter task name">
             <div class="row text-center">
         <div class="col-4">
@@ -12,7 +16,7 @@
             v-model="hours"
             :min="0"
             :max="24"
-            circle-color="#222831"
+            circle-color="#393E46"
             progress-color="#00ADB5"
             knob-color="#00ADB5"
           ></circle-slider>
@@ -23,7 +27,7 @@
             v-model="minutes"
             :min="0"
             :max="59"
-            circle-color="#222831"
+            circle-color="#393E46"
             progress-color="#00ADB5"
             knob-color="#00ADB5"
           ></circle-slider>
@@ -34,26 +38,43 @@
             v-model="seconds"
             :min="0"
             :max="59"
-            circle-color="#222831"
+            circle-color="#393E46"
             progress-color="#00ADB5"
             knob-color="#00ADB5"
           ></circle-slider>
           <p>Seconds: {{seconds}}</p>
         </div>
       </div>
-      <button class="btn" type="button" v-on:click="addTask">Add Task</button>
-     
-      <div class="card">
-        <div class="card-header">
-          {{listname}}
-        </div>
-        <ul class="list-group list-group-flush">
-          <draggable :list="tasks" class="dragArea">
-            <li class="list-group-item" v-for="(task, index) in tasks">{{ task.name }} : {{ task.duration }}<button @click="deleteTask(index)">Delete</button></li>
-          </draggable>
-        </ul>
+      <div class="text-center">
+        <button class="btn btn-main" type="button" v-on:click="addTask">Add Task</button>
       </div>
-      <button class="btn" type="button" v-on:click="saveTasklist">Save Tasklist</button>
+    </div>
+
+     <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card mt-2 mb-2">
+            <div v-if="listname.length == 0" class="card-header">
+              New Tasklist
+            </div>
+            <div v-else class="card-header">
+              {{listname}}
+            </div>
+            <ul class="list-group list-group-flush">
+              <draggable :list="tasks" class="dragArea">
+                <li class="list-group-item" v-for="(task, index) in tasks">
+                  {{ task.name }} : {{ task.duration }} 
+                  <button class="btn btn-danger" v-on:click="deleteTask(index)">Delete</button>
+                </li>
+              </draggable>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center">
+        <button class="btn btn-main" type="button" v-on:click="saveTasklist">Save Tasklist</button>
+      </div>
     </div>
   </div>
 </template>
@@ -113,10 +134,9 @@ export default {
 </script>
 
 <style>
-.card {
-  background-color: var(--main-blue);
+.new-task {
+  background-color: var(--main-bg-dark);
+  border-radius: 5px;
 }
-.list-group-item {
-  color: var(--main-bg-color);
-}
+
 </style>

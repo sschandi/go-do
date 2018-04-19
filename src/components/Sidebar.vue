@@ -1,11 +1,9 @@
 <template>
-<nav class="navbar navbar-expand-md navbar-dark">
+  <div id="sidebar">
+
   <router-link to="/" class="navbar-brand">Go Do</router-link>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav mr-auto">
+
+    <ul class="navbar-nav">
       <li v-if="isLoggedIn" class="nav-item">
         <router-link to="/dashboard" class="nav-link">Dashboard</router-link>
       </li>
@@ -16,12 +14,12 @@
         <router-link to="/register" class="nav-link">Register</router-link>
       </li>
     </ul>
-    <ul class="navbar-nav ml-auto">
+    <ul class="navbar-nav">
       <router-link v-if="!isLoggedIn" to="/login" class="btn btn-small btn-outline-success">Login</router-link>
       <button v-if="isLoggedIn" class="btn btn-small btn-outline-danger ml-auto" v-on:click="logout">Logout</button>
     </ul>
+
   </div>
-</nav>
 </template>
 
 <script>
@@ -29,7 +27,7 @@ import db from './firebaseInit'
 import firebase from 'firebase'
 
 export default {
-  name: 'navbar',
+  name: 'sidebar',
   data() {
     return {
       isLoggedIn: false,
@@ -53,10 +51,14 @@ export default {
 </script>
 
 <style>
-.navbar {
-
+#sidebar {
+    /* width: 200px;
+    height: 100vh;
+    max-width: 90vw;
+    background-color: var(--main-bg-dark);
+    padding: 1rem; */
 }
-.navbar-dark {
-  background-color: var(--main-bg-dark);
+#side-nav {
+
 }
 </style>

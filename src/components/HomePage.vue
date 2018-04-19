@@ -13,5 +13,7 @@ export default {
 </script>
 
 <style>
-
+#home-page {
+  display: flex;
+}
 </style>
