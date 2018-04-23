@@ -128,7 +128,7 @@ export default {
         })
         .then(docRef => {
           console.log('Tasklist added: ', docRef.id)
-          this.$router.push({ name: 'go-do', params: this.$route.params.tasklist})
+          this.$router.push({ name: 'go-do', params: { tasklist: docRef.id }})
         })
         .catch(error => {
           this.errors.push('Error adding tasklist: ', error)

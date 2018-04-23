@@ -33,7 +33,8 @@ body {
 h1 {
   color: var(--main-text-color);
 }
-input[type=text], input[type=text]:focus {
+input[type=text], input[type=text]:focus,
+input[type=password], input[type=password]:focus {
   background-color: var(--main-bg-dark);
   color: var(--main-text-color);
   border-color: var(--main-bg-dark);

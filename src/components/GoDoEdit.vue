@@ -1,7 +1,7 @@
 <template>
   <div id="go-do-edit">
     <div class="title container-fluid text-center mb-3">
-      <h1>Edit Tasklist</h1>
+      <h1>Edit Tasklist <span class="edit"><a href="#" v-on:click="deleteTasklist">Delete</a></span></h1>
       <div class="container">
         <input type="text" class="form-control form-control-lg" v-model="listname" placeholder="Enter tasklist name">
       </div>
@@ -160,12 +160,22 @@ export default {
           tasks: this.tasks
         })
         .then(docRef => {
-          this.$router.push({ name: 'go-do', params: this.$route.params.tasklist})
+          this.$router.push({ name: 'go-do', params: { tasklist: this.$route.params.tasklist }})
         })
         .catch(error => {
           this.errors.push('Error updating tasklist: ', error)
         })
       }
+    },
+    deleteTasklist: function() {
+      let uid = firebase.auth().currentUser.uid
+      db.collection('users').doc(uid).collection('tasklists').doc(this.$route.params.tasklist)
+      .delete()
+      .then(docRef => {
+        this.$router.push({ name: 'dashboard'})
+      }).catch(error => {
+        this.errors.push('Error removing doc: ', error)
+      })
     },
     checkTask: function() {
       this.errors = []
@@ -213,5 +223,8 @@ export default {
 .error p {
   margin: 0;
   color: var(--danger);
+}
+.edit {
+  font-size: 1rem;
 }
 </style>

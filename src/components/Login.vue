@@ -1,9 +1,17 @@
 <template>
-  <div class="container">
+  <div class="container text-center">
     <h1>Login</h1>
-    <input v-model="email" type="text" class="form-control" id="email" placeholder="name">
-    <input v-model="password" type="password" class="form-control" id="password" placeholder="password">
-    <button v-on:click="login" class="btn">Login</button>
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="form-group">
+          <input v-model="email" type="text" class="form-control" id="email" placeholder="name">
+        </div>
+        <div class="form-group">
+          <input v-model="password" type="password" class="form-control" id="password" placeholder="password">
+        </div>
+        <button v-on:click="login" class="btn btn-main">Login</button>
+      </div>
+    </div>
   </div>
 </template>
 

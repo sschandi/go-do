@@ -66,4 +66,13 @@ export default {
   background-color: var(--main-blue);
   border-color: var(--main-blue);
 }
+.btn-outline-success.active,
+.btn-outline-success:active {
+  background-color: var(--main-blue);
+  border-color: var(--main-blue);
+}
+.btn-outline-success.active:focus,
+.btn-outline-success:active:focus {
+  box-shadow: none;
+}
 </style>
