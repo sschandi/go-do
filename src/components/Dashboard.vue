@@ -6,7 +6,7 @@
     <div class="container">
       <!-- <div id="loader"></div> -->
       <div class="card-columns">
-      <div  v-for="tasklist in tasklists" v-bind:key="tasklist.id">
+      <div v-for="tasklist in tasklists" v-bind:key="tasklist.id">
         <div class="card completed-tasks mt-2 mb-2" :style="{'border-top': getColor()}">
           <div class="card-header">
             {{tasklist.listname}}

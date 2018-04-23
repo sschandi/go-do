@@ -61,10 +61,10 @@ input[type=password], input[type=password]:focus {
 .btn-main {
   background-color: var(--main-blue);
   border-color: var(--main-blue);
-  color: var(--main-text);
+  color: var(--main-text-color);
 }
 .btn-main:hover, .btn-main:focus, .btn-main:active, .btn-main.active, .open>.dropdown-toggle.btn-main {
-    color: #fff;
+    color: var(--main-text);
     background-color: var(--main-blue-dark);
     border-color: var(--main-blue-dark); /*set the color you want here*/
 }
@@ -74,5 +74,26 @@ a:link, a:visited {
 a:hover, a:active {
   color: var(--main-blue-dark);
   text-decoration: none;
+}
+.error {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 2em;
+  z-index: 100;
+  border-top: var(--danger) 2px solid !important;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+.error p {
+  margin: 0;
+  color: var(--danger);
+}
+.error-close {
+  color: var(--main-blue);
+  font-weight: bold;
+  text-align: right;
+  font-size: 22px;
+  line-height: 10px;
+  cursor: pointer;
 }
 </style>

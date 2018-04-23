@@ -17,8 +17,8 @@
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
-      <router-link v-if="!isLoggedIn" to="/login" class="btn btn-small btn-outline-success">Login</router-link>
-      <button v-if="isLoggedIn" class="btn btn-small btn-outline-danger ml-auto" v-on:click="logout">Logout</button>
+      <router-link v-if="!isLoggedIn" to="/login">Login</router-link>
+      <a href="#" v-if="isLoggedIn" v-on:click.prevent="logout">Log Out</a>
     </ul>
   </div>
 </nav>
@@ -45,7 +45,7 @@ export default {
   methods: {
     logout: function() {
       firebase.auth().signOut().then(() => {
-        this.$router.go({path: this.$router.path})
+        this.$router.go({ name: 'home-page'})
       }) 
     }
   }
@@ -53,26 +53,7 @@ export default {
 </script>
 
 <style>
-.navbar {
-
-}
 .navbar-dark {
   background-color: var(--main-bg-dark);
-}
-.btn-outline-success {
-  border-color: var(--main-blue);
-}
-.btn-outline-success:hover, .btn-outline-success:active, .btn-outline-success:visited {
-  background-color: var(--main-blue);
-  border-color: var(--main-blue);
-}
-.btn-outline-success.active,
-.btn-outline-success:active {
-  background-color: var(--main-blue);
-  border-color: var(--main-blue);
-}
-.btn-outline-success.active:focus,
-.btn-outline-success:active:focus {
-  box-shadow: none;
 }
 </style>

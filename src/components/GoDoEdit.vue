@@ -7,7 +7,8 @@
       </div>
     </div>
 
-    <div v-if="errors.length" class="container card error text-center pt-2 pb-3">
+    <div v-if="error" class="container card error text-center pt-2 pb-3">
+      <span v-on:click="error = false" class="error-close">&times;</span> 
       <h4>Whoops</h4>
       <p v-for="error in errors"> {{ error}}</p>
     </div>
@@ -103,7 +104,8 @@ export default {
       minutes: 0,
       seconds: 0,
       tasks: [],
-      errors: []
+      errors: [],
+      error: false
     }
   },
   created () {
@@ -181,9 +183,11 @@ export default {
       this.errors = []
       if (!this.task) {
         this.errors.push("Task name required.")
+        this.error = true
       }
       if ((this.hours + this.minutes + this.seconds) == 0) {
         this.errors.push("You can't have a 0 duration task.")
+        this.error = true
       }
       if(!this.errors.length) {
         return true
@@ -193,9 +197,11 @@ export default {
       this.errors = []
       if (!this.listname) {
         this.errors.push("Tasklist name required.")
+        this.error = true
       }
       if (!this.tasks.length) {
         this.errors.push("You need atleast one task!")
+        this.error = true
       }
       if(!this.errors.length) {
         return true
@@ -217,13 +223,6 @@ export default {
 </script>
 
 <style>
-.error {
-  border-top: var(--danger) 2px solid;
-}
-.error p {
-  margin: 0;
-  color: var(--danger);
-}
 .edit {
   font-size: 1rem;
 }

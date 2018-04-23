@@ -3,13 +3,15 @@
     <h1>Login</h1>
     <div class="row justify-content-center">
       <div class="col-md-6">
-        <div class="form-group">
-          <input v-model="email" type="text" class="form-control" id="email" placeholder="name">
-        </div>
-        <div class="form-group">
-          <input v-model="password" type="password" class="form-control" id="password" placeholder="password">
-        </div>
-        <button v-on:click="login" class="btn btn-main">Login</button>
+        <form>
+          <div class="form-group">
+            <input v-model="email" type="text" class="form-control" id="email" placeholder="name">
+          </div>
+          <div class="form-group">
+            <input v-model="password" type="password" class="form-control" id="password" placeholder="password">
+          </div>
+          <input v-on:click="login" type="submit" class="btn btn-main" value="Login">
+        </form>
       </div>
     </div>
   </div>
@@ -24,7 +26,8 @@ export default {
   data: function() {
     return {
       email: '',
-      password: ''
+      password: '',
+      errors: []
     }
   },
   methods: {
@@ -32,7 +35,7 @@ export default {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password)
         .then(user => {
           alert(`You are logged in as ${user.email}`)
-          this.$router.go({path: this.$router.path})
+          this.$router.go({ name: 'dashboard'})
         },
         err => {
           alert(err.message)
