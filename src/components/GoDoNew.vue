@@ -7,15 +7,13 @@
       </div>
     </div>
 
-    <div v-if="errors.length" class="container text-center">
-      <div class="error pt-2 pb-3">
-        <h4>Whoops</h4>
-        <p v-for="error in errors"> {{ error}}</p>
-      </div>
+    <div v-if="errors.length" class="container card error text-center pt-2 pb-3">
+      <h4>Whoops</h4>
+      <p v-for="error in errors"> {{ error}}</p>
     </div>
 
     <h2 class="text-center">Add New Task</h2>
-    <div class="container new-task p-4 mb-4">
+    <div class="container card new-task p-4 mb-4">
         <input type="text" class="form-control" v-model="task" placeholder="Enter task name">
             <div class="row text-center">
         <div class="col-4">
@@ -57,7 +55,7 @@
       </div>
     </div>
 
-     <div class="container">
+    <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-8">
           <div class="card mt-2 mb-2">
@@ -130,10 +128,10 @@ export default {
         })
         .then(docRef => {
           console.log('Tasklist added: ', docRef.id)
-          this.$router.push('/')
+          this.$router.push({ name: 'go-do', params: this.$route.params.tasklist})
         })
         .catch(error => {
-          console.error('Error adding tasklist: ', error)
+          this.errors.push('Error adding tasklist: ', error)
         })
       }
     },
@@ -178,15 +176,13 @@ export default {
 
 <style>
 .new-task {
-  background-color: var(--main-bg-dark);
-  border-radius: 5px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
 .error {
-  background-color: var(--main-bg-dark);
-  border-radius: 5px;
+  border-top: var(--danger) 2px solid;
 }
 .error p {
   margin: 0;
-  color: #dc3545;
+  color: var(--danger);
 }
 </style>

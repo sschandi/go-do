@@ -1,7 +1,7 @@
 <template>
 <div id="go-do">
   <div class="title container-fluid text-center mb-3">
-    <h1 class="text-center">{{listname}}</h1>
+    <h1 class="text-center">{{listname}}<span class="edit"><router-link v-bind:to="{name: 'go-do-edit', params: {tasklist: this.$route.params.tasklist}}" >Edit</router-link></span></h1>
     <button class="btn btn-main" @click="countdown">
       <template v-if="counting">Pause</template>
       <template v-else>Start</template>
@@ -29,7 +29,6 @@
     </div>
   </div>
   <div class="container">
-  
     <div v-if="completedTasks.length > 0" class="row justify-content-center">
       <div class="col-md-8">
         <div class="card completed-tasks mt-2 mb-2">
@@ -69,6 +68,7 @@
               </div>
             </template>
           </vue-countdown>
+           <button class="btn btn-main" v-on:click="addBreak">5 Min. Break next</button>
         </div>
       </div>
     </div>
@@ -81,8 +81,8 @@
             Upcoming Tasks
           </div>
           <ul class="list-group list-group-flush">
-            <draggable :list="tasks" class="dragArea">
-              <li class="list-group-item" v-for="(task, index) in currentTasks">
+            <draggable :list="currentTasks" class="dragArea">
+              <li class="list-group-item" v-for="(task, index) in currentTasks" :style="{'background-color': checkBreak(task.name)}">
                 {{ task.name }} 
                 <span class="float-right">{{getPrettyTime(task.duration)}}
                 <a href="#" class="" v-on:click="deleteTask(index)">Skip</a></span>
@@ -135,7 +135,6 @@ export default {
     .catch(err => {
       console.log("error getting doc: ", err)
     })
-
   },
   // beforeRouteEnter (to, from, next) {
   //   let uid = firebase.auth().currentUser.uid
@@ -160,13 +159,13 @@ export default {
       } else {
         console.log("no doc")
       }
-      this.currentTasks = this.tasks.slice(0)
-      this.currentTask = this.currentTasks[0]
-      this.currentTasks.splice(0,1)
-    })
-    .catch(err => {
-      console.log("error getting doc: ", err)
-    })
+        this.currentTasks = this.tasks.slice(0)
+        this.currentTask = this.currentTasks[0]
+        this.currentTasks.splice(0,1)
+      })
+      .catch(err => {
+        console.log("error getting doc: ", err)
+      })
     },
     countdown: function() {
       this.counting = !this.counting
@@ -206,6 +205,9 @@ export default {
       this.$refs.currentCountdown.pause()
       this.$refs.totalCountdown.pause()
     },
+    addBreak: function() {
+      this.currentTasks.unshift({name: "Break", duration: 300})
+    },
     playMusic: function() {
       let audio = new Audio(require('../assets/beep.mp3'))
       audio.play()
@@ -215,6 +217,13 @@ export default {
       let m = Math.floor(duration % 3600 / 60)
       let s = Math.floor(duration % 3600 % 60)
       return ('0' + h).slice(-2) + ":" + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2)
+    },
+    checkBreak: function(name) {
+      if (name == 'Break') {
+        return '#00ADB5'
+      } else {
+        return ''
+      }
     }
   },
   computed: {
@@ -236,6 +245,14 @@ export default {
       } else {
         return 0
       }
+    },
+    //not used requires alot of additional functions
+    getEstimatedCompletion: function() {
+      let timeObject = new Date()
+      let date = new Date(timeObject.getTime() + this.getTotalTime)
+      let nice = this.getPrettyTime(date)
+      return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+        + " " + date.getMonth() + " " + date.getDate() + " " + date.getFullYear()
     }
   }
 }
@@ -255,5 +272,8 @@ export default {
   display: flex;
   flex-direction: column;
   margin: 20px;
+}
+.edit {
+  font-size: 1rem;
 }
 </style>

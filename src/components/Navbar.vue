@@ -59,4 +59,11 @@ export default {
 .navbar-dark {
   background-color: var(--main-bg-dark);
 }
+.btn-outline-success {
+  border-color: var(--main-blue);
+}
+.btn-outline-success:hover, .btn-outline-success:active, .btn-outline-success:visited {
+  background-color: var(--main-blue);
+  border-color: var(--main-blue);
+}
 </style>
