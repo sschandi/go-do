@@ -129,7 +129,6 @@ export default {
           tasks: this.tasks
         })
         .then(docRef => {
-          console.log('Tasklist added: ', docRef.id)
           this.$router.push({ name: 'go-do', params: { tasklist: docRef.id }})
         })
         .catch(error => {

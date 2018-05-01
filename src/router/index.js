@@ -8,6 +8,8 @@ import GoDoEdit from '@/components/GoDoEdit'
 import GoDoNew from '@/components/GoDoNew'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
+import Demo from '@/components/GoDoDemo'
+import PageNotFound from '@/components/PageNotFound'
 import firebase from 'firebase'
 
 Vue.use(Router)
@@ -68,6 +70,20 @@ let router = new Router({
       meta: {
         requiresGuest: true
       }
+    },
+    {
+      path: '/demo',
+      name: 'demo',
+      component: Demo
+    },
+    {
+      path: '/404',
+      name: 'page-not-found',
+      component: PageNotFound
+    },
+    {
+      path: '*',
+      redirect: '/404'
     }
   ]
 })

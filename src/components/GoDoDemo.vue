@@ -1,12 +1,13 @@
 <template>
-<div id="go-do">
+<div id="go-do-demo">
   <div class="title container-fluid text-center mb-3">
-    <h1 class="text-center">{{listname}} <span class="edit"><router-link v-bind:to="{name: 'go-do-edit', params: {tasklist: this.$route.params.tasklist}}" >Edit</router-link></span></h1>
-    <button class="btn btn-main" v-if="!tasklistDone" v-on:click="countdown">
+    <button class="btn btn-main" v-on:click="startDemo">Demo</button>
+    <h1 data-step="1" data-intro="Welcome to the demo" class="text-center">{{listname}} <span class="edit"><router-link v-bind:to="{name: 'go-do-edit', params: {tasklist: this.$route.params.tasklist}}" >Edit</router-link></span></h1>
+    <button class="btn btn-main" @click="countdown">
       <template v-if="counting">Pause</template>
       <template v-else>Start</template>
     </button>
-    <button v-if="!counting" class="btn btn-danger" v-on:click="restart">Restart</button>
+    <button class="btn btn-danger" v-on:click="restart">Restart</button>
     <div class="container">
           <vue-countdown v-bind:auto-start="false" ref="totalCountdown" :time="getTotalTime" :interval="100" tag="p">
       <template slot-scope="props">
@@ -28,7 +29,7 @@
     </vue-countdown>
     </div>
   </div>
-  <div class="container">
+  <div data-step="2" data-intro="yowasz" class="container">
     <div v-if="completedTasks.length > 0" class="row justify-content-center">
       <div class="col-md-8">
         <div class="card completed-tasks mt-2 mb-2">
@@ -68,7 +69,7 @@
               </div>
             </template>
           </vue-countdown>
-           <button v-if="!tasklistDone" class="btn btn-main" v-on:click="addBreak">5 Min. Break next</button>
+           <button class="btn btn-main" v-on:click="addBreak">5 Min. Break next</button>
         </div>
       </div>
     </div>
@@ -98,30 +99,36 @@
 </template>
 
 <script>
-import db from './firebaseInit'
-import firebase from 'firebase'
 import draggable from 'vuedraggable'
 import VueCountdown from '@xkeshi/vue-countdown'
 
 export default {
-  name: 'go-do',
+  name: 'go-do-demo',
   components: {
     draggable,
     VueCountdown
   },
   data () {
     return {
-      listname: '',
+      listname: 'Sample Tasklist',
       counting: false,
-      tasklistDone: false,
-      tasks: [],
+      tasks: [
+        {duration: 5, name: 'task'},
+        {duration: 5, name: 'yes'},
+        {duration: 7, name: 'you'},
+        {duration: 10, name: 'can'},
+        {duration: 14, name: 'rearrange'},
+        {duration: 6452, name: 'them'}
+      ],
       currentTasks: [],
       completedTasks: [],
       currentTask: ''
     }
   },
   created () {
-    this.fetchData()
+    this.currentTasks = this.tasks.slice(0)
+    this.currentTask = this.currentTasks[0]
+    this.currentTasks.splice(0,1)
   },
   // beforeRouteEnter (to, from, next) {
   //   let uid = firebase.auth().currentUser.uid
@@ -138,29 +145,17 @@ export default {
   },
   methods: {
     fetchData () {
-      let uid = firebase.auth().currentUser.uid
-      db.collection('users').doc(uid).collection('tasklists').doc(this.$route.params.tasklist).get().then(doc => {
-      if (doc.exists) {
-        this.listname = doc.data().listname
-        this.tasks = doc.data().tasks
-      } else {
-        this.$router.push({ name: 'page-not-found'})
-      }
         this.currentTasks = this.tasks.slice(0)
         this.currentTask = this.currentTasks[0]
         this.currentTasks.splice(0,1)
-      })
-      .catch(err => {
-        console.log("error getting doc: ", err)
-      })
     },
     countdown: function() {
       this.counting = !this.counting
-              console.log(this.$refs.currentCountdown.totalSeconds)
       if(this.counting == false) {
         this.pause()
       } else {
-        this.start()
+        this.$refs.currentCountdown.start()
+        this.$refs.totalCountdown.start()
       }
     },
     deleteTask: function(index) {
@@ -168,8 +163,6 @@ export default {
     },
     taskEnd: function () {
       if (this.currentTasks.length > 0) {
-        // console.log(this.$refs.currentCountdown)
-        // console.log(this.$refs.currentCountdown.seconds)
         this.playMusic()
         this.completedTasks.push(this.currentTask)
         this.currentTask = this.currentTasks[0]
@@ -178,33 +171,21 @@ export default {
         this.$refs.currentCountdown.start()
       } else {
         this.completedTasks.push(this.currentTask)
-        this.currentTask = {duration: 0, name: 'Done!'}
+        this.currentTask = ''
         this.counting = false
-        this.tasklistDone = true
         this.playMusic()
       }
     },
-    taskEndEarly: function() {
-
-    },
     restart: function() {
       this.counting = false
-      this.pause()
-      this.$refs.currentCountdown.init()
-      this.$refs.totalCountdown.init()
       this.currentTasks = this.tasks.slice(0)
       this.currentTask = this.currentTasks[0]
       this.currentTasks.splice(0,1)
       this.completedTasks = []
-      this.tasklistDone = false
     },
     pause: function() {
       this.$refs.currentCountdown.pause()
       this.$refs.totalCountdown.pause()
-    },
-    start: function() {
-      this.$refs.currentCountdown.start()
-      this.$refs.totalCountdown.start()
     },
     addBreak: function() {
       this.currentTasks.unshift({name: "Break", duration: 300})
@@ -225,6 +206,9 @@ export default {
       } else {
         return ''
       }
+    },
+    startDemo: function() {
+      introJs().start()
     }
   },
   computed: {

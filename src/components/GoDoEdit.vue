@@ -109,19 +109,7 @@ export default {
     }
   },
   created () {
-    let uid = firebase.auth().currentUser.uid
-    db.collection('users').doc(uid).collection('tasklists').doc(this.$route.params.tasklist).get().then(doc => {
-      if (doc.exists) {
-        this.listname = doc.data().listname
-        this.tasks = doc.data().tasks
-      } else {
-        this.$router.push({ name: 'dashboard'})
-      }
-    })
-    .catch(err => {
-      console.log('Error finding tasklist: ', error)
-      this.$router.push({ name: 'dashboard'})
-    })
+    this.fetchData()
   },
   watch: {
     '$route': 'fetchData'
