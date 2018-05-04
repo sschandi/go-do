@@ -47,7 +47,10 @@
           <ul class="list-group list-group-flush">
             <li class="list-group-item" v-for="task in completedTasks">
               {{ task.name }} 
-                <span class="float-right">{{getPrettyTime(task.duration)}}</span>
+              <div class="float-right">
+                <template v-if="task.endTime"><span class="time-minus">-{{getPrettyTime(task.endTime)}}</span> {{getPrettyTime(task.duration-task.endTime)}}</template>
+                <template v-else>{{getPrettyTime(task.duration)}}</template>
+              </div>
             </li>
           </ul>
         </div>
@@ -59,7 +62,7 @@
         <div class="card current-task mt-2 mb-2">
           <div class="card-body">
           <h3>Current Task: {{ currentTask.name }}</h3>
-          <vue-countdown v-bind:auto-start="false" ref="currentCountdown" :time="getCurrentTaskTime" :interval="100" @countdownend="taskEnd" tag="p">
+          <vue-countdown v-bind:auto-start="false" ref="currentCountdown" :time="getCurrentTaskTime" :interval="100" v-on:countdownend="taskEnd()" tag="p">
             <template slot-scope="props">
               <div class="row justify-content-center">
                 <div class="col">
@@ -77,9 +80,9 @@
               </div>
             </template>
           </vue-countdown>
-          <div v-if="!tasklistDone" class="row text-center">
+          <div v-if="counting" class="row text-center">
             <div class="col pull-left">
-              <button class="btn btn-main" v-on:click="taskEndEarly">I'm Done</button>
+              <button class="btn btn-main" v-on:click="taskEndEarly()">I'm Done</button>
             </div>
             <div class="col pull-right">
               <div class="dropdown">
@@ -107,7 +110,7 @@
           </div>
           <ul class="list-group list-group-flush">
             <draggable :list="currentTasks" class="dragArea">
-              <li class="list-group-item" v-for="(task, index) in currentTasks" :style="{'background-color': checkBreak(task.name)}">
+              <li class="list-group-item" v-for="(task, index) in currentTasks" :style="{'background-color': checkBreak(task.id)}">
                 {{ task.name }} 
                 <span class="float-right">{{getPrettyTime(task.duration)}}
                 <a href="#" class="" v-on:click="deleteTask(index)">Skip</a></span>
@@ -142,7 +145,8 @@ export default {
       tasks: [],
       currentTasks: [],
       completedTasks: [],
-      currentTask: ''
+      currentTask: '',
+      audio: new Audio(require('../assets/ring.mp3'))
     }
   },
   created () {
@@ -209,22 +213,25 @@ export default {
       }
     },
     taskEndEarly: function() {
-      this.counting = false
-      this.pause()
-      this.currentTask.duration = this.$refs.currentCountdown.totalSeconds
+      this.currentTask.endTime = this.currentTask.duration - this.$refs.currentCountdown.totalSeconds
       this.taskEnd()
-      this.start()
     },
     restart: function() {
-      this.counting = false
-      this.pause()
-      this.$refs.currentCountdown.init()
-      this.$refs.totalCountdown.init()
+      this.removeEndTimes()
+      if (!this.tasklistDone) {
+        this.$refs.currentCountdown.init()
+        this.$refs.totalCountdown.init()
+      }
       this.currentTasks = this.tasks.slice(0)
       this.currentTask = this.currentTasks[0]
       this.currentTasks.splice(0,1)
       this.completedTasks = []
       this.tasklistDone = false
+    },
+    removeEndTimes: function() {
+      for(let i=0; i<this.tasks.length; i++) {
+        this.tasks[i].endTime = null;
+      }
     },
     pause: function() {
       this.$refs.currentCountdown.pause()
@@ -235,11 +242,11 @@ export default {
       this.$refs.totalCountdown.start()
     },
     addBreak: function(duration) {
-      this.currentTasks.unshift({name: "Break", duration: duration})
+      this.currentTasks.unshift({name: 'Break', duration: duration, id: 'break'})
     },
     playMusic: function() {
-      let audio = new Audio(require('../assets/beep.mp3'))
-      audio.play()
+      // let audio = new Audio(require('../assets/beep.mp3'))
+      this.audio.play()
     },
     getPrettyTime: function(duration) {
       let h = Math.floor(duration / 3600)
@@ -247,8 +254,8 @@ export default {
       let s = Math.floor(duration % 3600 % 60)
       return ('0' + h).slice(-2) + ":" + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2)
     },
-    checkBreak: function(name) {
-      if (name == 'Break') {
+    checkBreak: function(id) {
+      if (id == 'break') {
         return '#00ADB5'
       } else {
         return ''
@@ -295,5 +302,11 @@ export default {
 }
 .edit {
   font-size: 1rem;
+}
+.time-minus {
+  color: var(--success);
+}
+.time-plus {
+  color: var(--danger);
 }
 </style>
