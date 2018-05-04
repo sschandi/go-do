@@ -58,6 +58,15 @@ input[type=password], input[type=password]:focus {
   background-color: var(--main-bg-dark);
   border-top: var(--main-blue) 2px solid;
 }
+.completed-tasks {
+  border-top: var(--success) 2px solid;
+}
+.current-task {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+.upcoming-tasks {
+  border-top: var(--danger) 2px solid;
+}
 .list-group-item {
   background-color: var(--main-bg-dark);
 }

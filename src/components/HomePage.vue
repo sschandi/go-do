@@ -8,40 +8,56 @@
         width="70%" height="auto" class="svg-content">
         </object>
       </div> -->
-      <div class="row d-flex align-items-center">
-        <div class="col-lg-4 text-right pt-4 pb-4 home-text">
-          <h1 class="test">Go Do</h1>
-          <h3>Tasklist App</h3>
-        </div>
-        <div id="home-callout" class="col-lg-8">
-          <div class="row d-flex flex-row-reverse align-items-center tasks-padded">
-            <div class="col-sm-8 col-md-8 col-lg-8 col-xl-6">
-              <div class="card current-task mt-2 mb-2 text-center">
-              <div class="card-body">
-              <h3>Current Task: Register/Login</h3>
-              <vue-countdown :time="500000" :interval="100" tag="p">
-                <template slot-scope="props">
-                  <div class="row justify-content-center">
-                    <div class="col">
-                    <h1 class="font-weight-light">{{ props.hours }}</h1>
-                    <p>Hours</p>
-                  </div>
-                  <div class="col">
-                    <h1 class="font-weight-light">{{ props.minutes }}</h1>
-                    <p>Minutes</p>
-                  </div>
-                  <div class="col">
-                    <h1 class="font-weight-light">{{ props.seconds }}</h1>
-                    <p>Seconds</p>
-                  </div>
-                  </div>
-                </template>
-              </vue-countdown>
-            </div>
+      <div class="container text-center">
+        <div class="row">
+          <div class="col right-title-style d-none d-md-block">
+            <img src="../../static/gear-2.png" class="right-title-gear-1">
+            <img src="../../static/gear-1.png" class="right-title-gear-2">
           </div>
+          <div class="col">
+            <h1 class="test">Go Do</h1>
+            <h3>Tasklist App</h3>
+          </div>
+          <div class="col left-title-style d-none d-md-block">
+            <img src="../../static/gear-1.png" class="left-title-gear-1">
+            <img src="../../static/gear-2.png" class="left-title-gear-2">
+          </div>
+        </div>
+        <!-- <div class="title-border-thick"></div>
+        <div class="title-border-thin"></div> -->
+      </div>
 
-
-            <div class="card upcoming-tasks mt-2 mb-2">
+      <div id="home-callout" class="container text-center d-none d-md-block">
+        <img src="../../static/laptop.png" class="img-fluid">
+        <div class="row justify-content-center callout-body">
+          <div>
+            <div class="card current-task mt-2 mb-2 text-center">
+              <div class="card-body">
+                <h3>Current Task: Register/Login</h3>
+                <vue-countdown :time="500000" :interval="100" tag="p">
+                  <template slot-scope="props">
+                    <div class="row justify-content-center">
+                      <div class="col">
+                      <h1 class="font-weight-light">{{ props.hours }}</h1>
+                      <p>Hours</p>
+                    </div>
+                    <div class="col">
+                      <h1 class="font-weight-light">{{ props.minutes }}</h1>
+                      <p>Minutes</p>
+                    </div>
+                    <div class="col">
+                      <h1 class="font-weight-light">{{ props.seconds }}</h1>
+                      <p>Seconds</p>
+                    </div>
+                    </div>
+                  </template>
+                </vue-countdown>
+                <router-link class="float-left" v-bind:to="{name: 'register'}">Register</router-link>
+                <router-link tag="button" class="btn btn-main" v-bind:to="{name: 'demo'}">Demo</router-link>
+                <router-link class="float-right" v-bind:to="{name: 'login'}">Login</router-link>
+              </div>
+            </div>
+            <div class="card upcoming-tasks mt-2 mb-2 text-left d-none d-lg-block">
               <div class="card-header">
                 Upcoming Tasks
               </div>
@@ -52,12 +68,42 @@
                 </li>
               </ul>
             </div>
-
-            </div>
           </div>
-
         </div>
       </div>
+
+      <div class="d-md-none">
+        <div class="row justify-content-center">
+                      <div class="card current-task mt-2 mb-2 text-center">
+              <div class="card-body">
+                <h3>Current Task: Register/Login</h3>
+                <vue-countdown :time="500000" :interval="100" tag="p">
+                  <template slot-scope="props">
+                    <div class="row justify-content-center">
+                      <div class="col">
+                      <h1 class="font-weight-light">{{ props.hours }}</h1>
+                      <p>Hours</p>
+                    </div>
+                    <div class="col">
+                      <h1 class="font-weight-light">{{ props.minutes }}</h1>
+                      <p>Minutes</p>
+                    </div>
+                    <div class="col">
+                      <h1 class="font-weight-light">{{ props.seconds }}</h1>
+                      <p>Seconds</p>
+                    </div>
+                    </div>
+                  </template>
+                </vue-countdown>
+                <router-link class="float-left" v-bind:to="{name: 'register'}">Register</router-link>
+                <router-link tag="button" class="btn btn-main" v-bind:to="{name: 'demo'}">Demo</router-link>
+                <router-link class="float-right" v-bind:to="{name: 'login'}">Login</router-link>
+              </div>
+            </div>
+        </div>
+      </div>
+
+
     </div>
   </div>
 </template>
@@ -93,19 +139,55 @@ export default {
 .test {
   font-size: 5rem;
 }
-
 #home-page {
   background-color: var(--main-blue);
 }
-#home-callout {
-  height: 80vh;
-  min-height: 600px;
-  background-image: url("../../static/laptop.svg");
-  background-repeat: no-repeat;
-  background-position: right top;
+.right-title-gear-1 {
+  position: absolute;
+  width: 100px;
+  right: 110px;
+  top: 33px;
+  -webkit-animation: spin-reverse 16s linear infinite;
+  animation: spin-reverse 16s linear infinite;
 }
-.tasks-padded {
-  margin-top: 13vh;
+.right-title-gear-2 {
+  position: absolute;
+  width: 125px;
+  right: 0;
+  -webkit-animation: spin 16s linear infinite;
+  animation: spin 16s linear infinite;
+}
+.left-title-gear-1 {
+  position: absolute;
+  width: 125px;
+  left: 0;
+  -webkit-animation: spin-reverse 16s linear infinite;
+  animation: spin-reverse 16s linear infinite;
+}
+.left-title-gear-2 {
+  position: absolute;
+  width: 100px;
+  left: 110px;
+  top: 33px;
+  -webkit-animation: spin 16s linear infinite;
+  animation: spin 16s linear infinite;
+}
+.title-border-thick {
+  border-bottom: 6px solid var(--main-text-color);
+}
+.title-border-thin {
+  border-bottom: 2px solid var(--main-text-color);
+  padding: 2px;
+}
+#home-callout {
+  position: relative;
+  padding-top: 2em;
+}
+.callout-body {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .svg-content { 
 	display: inline-block;
@@ -180,6 +262,30 @@ export default {
     -webkit-transform: rotate(360deg);  /* Chrome, Opera 15+, Safari 3.1+ */
     -ms-transform: rotate(360deg);  /* IE 9 */
     transform: rotate(360deg);  /* Firefox 16+, IE 10+, Opera */
+  }
+}
+@-webkit-keyframes spin-reverse {
+  0%   {
+    -webkit-transform: rotate(0deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+    -ms-transform: rotate(0deg);  /* IE 9 */
+    transform: rotate(0deg);  /* Firefox 16+, IE 10+, Opera */
+  }
+  100% {
+    -webkit-transform: rotate(-360deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+    -ms-transform: rotate(-360deg);  /* IE 9 */
+    transform: rotate(-360deg);  /* Firefox 16+, IE 10+, Opera */
+  }
+}
+@keyframes spin-reverse {
+  0%   {
+    -webkit-transform: rotate(0deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+    -ms-transform: rotate(0deg);  /* IE 9 */
+    transform: rotate(0deg);  /* Firefox 16+, IE 10+, Opera */
+  }
+  100% {
+    -webkit-transform: rotate(-360deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+    -ms-transform: rotate(-360deg);  /* IE 9 */
+    transform: rotate(-360deg);  /* Firefox 16+, IE 10+, Opera */
   }
 }
 </style>

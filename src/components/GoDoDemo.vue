@@ -117,7 +117,7 @@ export default {
         {duration: 5, name: 'yes'},
         {duration: 7, name: 'you'},
         {duration: 10, name: 'can'},
-        {duration: 14, name: 'rearrange'},
+        {duration: 14, name: 'drag to rearrange'},
         {duration: 6452, name: 'them'}
       ],
       currentTasks: [],

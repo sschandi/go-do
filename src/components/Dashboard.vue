@@ -5,19 +5,21 @@
     </div>
     <div class="container">
       <!-- <div id="loader"></div> -->
+      <transition name="fade" appear>
       <div class="card-columns">
-      <div v-for="tasklist in tasklists" v-bind:key="tasklist.id">
-        <div class="card completed-tasks mt-2 mb-2" :style="{'border-top': getColor()}">
-          <div class="card-header">
-            {{tasklist.listname}}
-            <router-link v-bind:to="{name: 'go-do', params: {tasklist: tasklist.id}}" class="float-right">View</router-link>
+        <div v-for="tasklist in tasklists" v-bind:key="tasklist.id">
+          <div class="card completed-tasks mt-2 mb-2" :style="{'border-top': getColor()}">
+            <div class="card-header">
+              {{tasklist.listname}}
+              <router-link v-bind:to="{name: 'go-do', params: {tasklist: tasklist.id}}" class="float-right">View</router-link>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item" v-for="task in tasklist.tasks">{{ task.name }}<span class="float-right">{{ getPrettyTime(task.duration) }}</span></li>
+            </ul>
           </div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item" v-for="task in tasklist.tasks">{{ task.name }}<span class="float-right">{{ getPrettyTime(task.duration) }}</span></li>
-          </ul>
         </div>
       </div>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -70,6 +72,12 @@ export default {
 }
 .list-group-item {
   background-color: var(--main-bg-dark);
+}
+.fade-enter-active {
+  transition: opacity 2s;
+}
+.fade-enter {
+  opacity: 0;
 }
 #loader {
   position: relative;

@@ -28,6 +28,15 @@
     </vue-countdown>
     </div>
   </div>
+
+  <div v-if="tasklistDone" class="row justify-content-center text-center">
+    <div class="card current-task mt-2 mb-2">
+      <div class="card-body">
+        <h3>You are done!</h3>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     <div v-if="completedTasks.length > 0" class="row justify-content-center">
       <div class="col-md-8">
@@ -45,7 +54,7 @@
       </div>
     </div>
 
-  <div class="row justify-content-center text-center">
+  <div v-if="!tasklistDone" class="row justify-content-center text-center">
     <div class="col-md-8">
         <div class="card current-task mt-2 mb-2">
           <div class="card-body">
@@ -68,7 +77,23 @@
               </div>
             </template>
           </vue-countdown>
-           <button v-if="!tasklistDone" class="btn btn-main" v-on:click="addBreak">5 Min. Break next</button>
+          <div v-if="!tasklistDone" class="row text-center">
+            <div class="col pull-left">
+              <button class="btn btn-main" v-on:click="taskEndEarly">I'm Done</button>
+            </div>
+            <div class="col pull-right">
+              <div class="dropdown">
+                <button class="btn btn-main dropdown-toggle" type="button" id="break" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Take Break Next
+                </button>
+                <div class="dropdown-menu" aria-labelledby="break">
+                  <a class="dropdown-item" v-on:click="addBreak(60)">1 Min.</a>
+                  <a class="dropdown-item" v-on:click="addBreak(300)">5 Min.</a>
+                  <a class="dropdown-item" v-on:click="addBreak(600)">10 Min.</a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -156,7 +181,6 @@ export default {
     },
     countdown: function() {
       this.counting = !this.counting
-              console.log(this.$refs.currentCountdown.totalSeconds)
       if(this.counting == false) {
         this.pause()
       } else {
@@ -185,7 +209,11 @@ export default {
       }
     },
     taskEndEarly: function() {
-
+      this.counting = false
+      this.pause()
+      this.currentTask.duration = this.$refs.currentCountdown.totalSeconds
+      this.taskEnd()
+      this.start()
     },
     restart: function() {
       this.counting = false
@@ -206,8 +234,8 @@ export default {
       this.$refs.currentCountdown.start()
       this.$refs.totalCountdown.start()
     },
-    addBreak: function() {
-      this.currentTasks.unshift({name: "Break", duration: 300})
+    addBreak: function(duration) {
+      this.currentTasks.unshift({name: "Break", duration: duration})
     },
     playMusic: function() {
       let audio = new Audio(require('../assets/beep.mp3'))
@@ -260,15 +288,6 @@ export default {
 </script>
 
 <style>
-.completed-tasks {
-  border-top: var(--success) 2px solid;
-}
-.current-task {
-  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-}
-.upcoming-tasks {
-  border-top: var(--danger) 2px solid;
-}
 .block {
   display: flex;
   flex-direction: column;
