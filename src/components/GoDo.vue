@@ -29,10 +29,17 @@
     </div>
   </div>
 
-  <div v-if="tasklistDone" class="row justify-content-center text-center">
-    <div class="card current-task mt-2 mb-2">
-      <div class="card-body">
-        <h3>You are done!</h3>
+  <div class="container">
+    <div v-if="tasklistDone" class="row justify-content-center text-center">
+      <div class="col-md-8">
+        <div class="card current-task mt-2 mb-2">
+          <div class="card-body">
+            <h3>You are done!</h3>
+            <p>Estimated Time: {{ getPrettyTime(getEstimatedTime) }} Time Taken: {{ getPrettyTime(getActualTime) }}</p>
+            <p>Breaks Taken: {{ getBreakAmount }} for {{ getPrettyTime(getBreakTime) }}</p>
+            <p>Best Time:  Worst Time:</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -48,7 +55,8 @@
             <li class="list-group-item" v-for="task in completedTasks">
               {{ task.name }} 
               <div class="float-right">
-                <template v-if="task.endTime"><span class="time-minus">-{{getPrettyTime(task.endTime)}}</span> {{getPrettyTime(task.duration-task.endTime)}}</template>
+                <template v-if="task.endTime"><span class="time-minus">-{{getPrettyTime(task.duration-task.endTime)}}</span> {{getPrettyTime(task.endTime)}}</template>
+                <template v-else-if="task.addedTime"><span class="time-plus">+{{getPrettyTime(task.addedTime)}}</span></template>
                 <template v-else>{{getPrettyTime(task.duration)}}</template>
               </div>
             </li>
@@ -84,13 +92,25 @@
             <div class="col pull-left">
               <button class="btn btn-main" v-on:click="taskEndEarly()">I'm Done</button>
             </div>
+            <div class="col">
+              <div class="dropdown">
+                <button class="btn btn-main dropdown-toggle" type="button" id="add-time" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Gimme More Time
+                </button>
+                <div class="dropdown-menu" aria-labelledby="add-time">
+                  <a class="dropdown-item" v-on:click="addTime(5)">1 Min.</a>
+                  <a class="dropdown-item" v-on:click="addTime(300)">5 Min.</a>
+                  <a class="dropdown-item" v-on:click="addTime(600)">10 Min.</a>
+                </div>
+              </div>
+            </div>
             <div class="col pull-right">
               <div class="dropdown">
                 <button class="btn btn-main dropdown-toggle" type="button" id="break" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Take Break Next
                 </button>
                 <div class="dropdown-menu" aria-labelledby="break">
-                  <a class="dropdown-item" v-on:click="addBreak(60)">1 Min.</a>
+                  <a class="dropdown-item" v-on:click="addBreak(5)">1 Min.</a>
                   <a class="dropdown-item" v-on:click="addBreak(300)">5 Min.</a>
                   <a class="dropdown-item" v-on:click="addBreak(600)">10 Min.</a>
                 </div>
@@ -169,12 +189,15 @@ export default {
     fetchData () {
       let uid = firebase.auth().currentUser.uid
       db.collection('users').doc(uid).collection('tasklists').doc(this.$route.params.tasklist).get().then(doc => {
-      if (doc.exists) {
-        this.listname = doc.data().listname
-        this.tasks = doc.data().tasks
-      } else {
-        this.$router.push({ name: 'page-not-found'})
-      }
+        if (doc.exists) {
+          this.listname = doc.data().listname
+          this.tasks = doc.data().tasks
+        } else {
+          this.$router.push({ name: 'page-not-found'})
+        }
+        // for (let i = 0; i < this.tasks.length; i++) {
+        //   this.currentTasks[i] = JSON.parse(JSON.stringify(this.tasks[i]))
+        // }
         this.currentTasks = this.tasks.slice(0)
         this.currentTask = this.currentTasks[0]
         this.currentTasks.splice(0,1)
@@ -198,6 +221,9 @@ export default {
       if (this.currentTasks.length > 0) {
         // console.log(this.$refs.currentCountdown)
         // console.log(this.$refs.currentCountdown.seconds)
+        if ((this.currentTask.id == 'addedTime' || this.currentTask.id == 'break') && !this.currentTask.addedTime) {
+          this.currentTask.addedTime = this.currentTask.duration
+        }
         this.playMusic()
         this.completedTasks.push(this.currentTask)
         this.currentTask = this.currentTasks[0]
@@ -206,15 +232,20 @@ export default {
         this.$refs.currentCountdown.start()
       } else {
         this.completedTasks.push(this.currentTask)
-        this.currentTask = {duration: 0, name: 'Done!'}
         this.counting = false
+        this.pause()
         this.tasklistDone = true
         this.playMusic()
       }
     },
     taskEndEarly: function() {
-      this.currentTask.endTime = this.currentTask.duration - this.$refs.currentCountdown.totalSeconds
-      this.taskEnd()
+      if (this.currentTask.id == 'addedTime' || this.currentTask.id == 'break') {
+        this.currentTask.addedTime = this.currentTask.duration - this.$refs.currentCountdown.totalSeconds
+        this.taskEnd()
+      } else {
+        this.currentTask.endTime = this.currentTask.duration - this.$refs.currentCountdown.totalSeconds
+        this.taskEnd()
+      }
     },
     restart: function() {
       this.removeEndTimes()
@@ -243,6 +274,9 @@ export default {
     },
     addBreak: function(duration) {
       this.currentTasks.unshift({name: 'Break', duration: duration, id: 'break'})
+    },
+    addTime: function(duration) {
+      this.currentTasks.unshift({name: 'Extra Time: ' + this.currentTask.name, duration: duration, id: 'addedTime'})
     },
     playMusic: function() {
       // let audio = new Audio(require('../assets/beep.mp3'))
@@ -281,6 +315,44 @@ export default {
       } else {
         return 0
       }
+    },
+    getEstimatedTime: function() {
+      let tempTime = 0
+      for (let i=0; i<this.completedTasks.length; i++) {
+        if (!this.completedTasks[i].id) {
+          tempTime += this.completedTasks[i].duration
+        }
+      }
+      return tempTime
+    },
+    getActualTime: function() {
+      let tempTime = this.getEstimatedTime
+      for (let i=0; i<this.completedTasks.length; i++) {
+         if (this.completedTasks[i].endTime) {
+          tempTime -= (this.completedTasks[i].duration- this.completedTasks[i].endTime)
+        } else if (this.completedTasks[i].addedTime) {
+          tempTime += this.completedTasks[i].addedTime
+        }
+      }
+      return tempTime
+    },
+    getBreakAmount: function() {
+      let breakAmount = 0
+      for (let i=0; i<this.completedTasks.length; i++) {
+        if (this.completedTasks[i].id == 'break') {
+           breakAmount ++
+        }
+      }
+      return breakAmount
+    },
+    getBreakTime: function() {
+      let tempTime = 0
+      for (let i=0; i<this.completedTasks.length; i++) {
+        if (this.completedTasks[i].id == 'break') {
+           tempTime += this.completedTasks[i].addedTime
+        }
+      }
+      return tempTime
     },
     //not used requires alot of additional functions
     getEstimatedCompletion: function() {
