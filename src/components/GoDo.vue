@@ -105,9 +105,9 @@
                   Gimme More Time
                 </button>
                 <div class="dropdown-menu" aria-labelledby="add-time">
-                  <a class="dropdown-item" v-on:click="addTime(5)">1 Min.</a>
-                  <a class="dropdown-item" v-on:click="addTime(300)">5 Min.</a>
-                  <a class="dropdown-item" v-on:click="addTime(600)">10 Min.</a>
+                  <a href="#" class="dropdown-item" v-on:click.prevent="addTime(5)">1 Min.</a>
+                  <a href="#" class="dropdown-item" v-on:click.prevent="addTime(300)">5 Min.</a>
+                  <a href="#" class="dropdown-item" v-on:click.prevent="addTime(600)">10 Min.</a>
                 </div>
               </div>
             </div>
@@ -117,9 +117,9 @@
                   Take Break Next
                 </button>
                 <div class="dropdown-menu" aria-labelledby="break">
-                  <a class="dropdown-item" v-on:click="addBreak(5)">1 Min.</a>
-                  <a class="dropdown-item" v-on:click="addBreak(300)">5 Min.</a>
-                  <a class="dropdown-item" v-on:click="addBreak(600)">10 Min.</a>
+                  <a href="#" class="dropdown-item" v-on:click.prevent="addBreak(5)">1 Min.</a>
+                  <a href="#" class="dropdown-item" v-on:click.prevent="addBreak(300)">5 Min.</a>
+                  <a href="#" class="dropdown-item" v-on:click.prevent="addBreak(600)">10 Min.</a>
                 </div>
               </div>
             </div>
@@ -140,7 +140,7 @@
               <li class="list-group-item" v-for="(task, index) in currentTasks" :style="{'background-color': checkBreak(task.id)}">
                 {{ task.name }} 
                 <span class="float-right">{{getPrettyTime(task.duration)}}
-                <a href="#" class="" v-on:click="deleteTask(index)">Skip</a></span>
+                <a href="#" class="" v-on:click.prevent="deleteTask(index)">Skip</a></span>
               </li>
             </draggable>
           </ul>

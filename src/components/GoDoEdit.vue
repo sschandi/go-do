@@ -1,7 +1,7 @@
 <template>
   <div id="go-do-edit">
     <div class="title container-fluid text-center mb-3">
-      <h1>Edit Tasklist <span class="edit"><a href="#" v-on:click="deleteTasklist">Delete</a></span></h1>
+      <h1>Edit Tasklist <span class="edit"><a href="#" v-on:click.prevent="deleteTasklist">Delete</a></span></h1>
       <div class="container">
         <input type="text" class="form-control form-control-lg" v-model="listname" placeholder="Enter tasklist name">
       </div>
@@ -68,11 +68,13 @@
             </div>
             <ul class="list-group list-group-flush">
               <draggable :list="tasks" class="dragArea">
-                <li class="list-group-item" v-for="(task, index) in tasks">
+                <transition-group name="slide-fade">
+                <li class="list-group-item" v-for="(task, index) in tasks" v-bind:key="index">
                   {{ task.name }} 
                   <span class="float-right">{{getPrettyTime(task.duration)}}
-                  <a href="#" v-on:click="deleteTask(index)">Delete</a></span>
+                  <a href="#" v-on:click.prevent="deleteTask(index)">Delete</a></span>
                 </li>
+                </transition-group>
               </draggable>
             </ul>
           </div>

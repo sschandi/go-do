@@ -36,6 +36,13 @@ body {
 h1 {
   color: var(--main-text-color);
 }
+a:not([href]):not([tabindex]) {
+  color: var(--main-blue);
+  cursor: pointer;
+}
+a:not([href]):not([tabindex]):hover {
+  color: var(--main-blue-dark);
+}
 input[type=text], input[type=text]:focus,
 input[type=password], input[type=password]:focus {
   background-color: var(--main-bg-dark);
@@ -107,5 +114,23 @@ a:hover, a:active {
   font-size: 22px;
   line-height: 10px;
   cursor: pointer;
+}
+/* transitions */
+.slide-fade-enter {
+  transform: translateY(-100%);
+}
+.slide-fade-enter-to {
+  transform: translateX(0);
+
+}
+.slide-fade-leave {
+  transform: translateX(0);
+}
+.slide-fade-leave-to { 
+  opacity: 0;
+}
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 500ms ease-in-out
 }
 </style>

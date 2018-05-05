@@ -6,10 +6,10 @@
     <div class="container">
       <!-- <div id="loader"></div> -->
       <input type="text" v-model="search" class="form-control mb-1" placeholder="Search"/>
-      <transition name="fade" appear>
+
 
       <div class="card-columns">
-              <transition-group name="item-transition">
+        <transition-group name="slide">
         <div v-for="tasklist in filteredTasklists" v-bind:key="tasklist.id">
           <div class="card completed-tasks mt-2 mb-2" :style="{'border-top': getColor()}">
             <div class="card-header">
@@ -17,14 +17,13 @@
               <router-link v-bind:to="{name: 'go-do', params: {tasklist: tasklist.id}}" class="float-right">View</router-link>
             </div>
             <ul class="list-group list-group-flush">
-              <li class="list-group-item" v-for="task in tasklist.tasks" v-bind:key="task.name">{{ task.name }}<span class="float-right">{{ getPrettyTime(task.duration) }}</span></li>
+              <li class="list-group-item" v-for="(task, index) in tasklist.tasks" v-bind:key="index">{{ task.name }}<span class="float-right">{{ getPrettyTime(task.duration) }}</span></li>
             </ul>
           </div>
         </div>
-              </transition-group>
+        </transition-group>
       </div>
 
-      </transition>
     </div>
   </div>
 </template>
@@ -84,36 +83,27 @@ export default {
 .list-group-item {
   background-color: var(--main-bg-dark);
 }
+/* not used */
 .fade-enter-active {
   transition: opacity 2s;
 }
 .fade-enter {
   opacity: 0;
 }
-/* base */
-.item-transition {
-  backface-visibility: hidden;
-  z-index: 1;
-}
-/* moving */
-.item-transition-move {
-  transition: all 600ms ease-in-out 50ms;
-}
-/* appearing */
-.item-transition-enter-active {
-  transition: all 300ms ease-out;
-}
-/* disappearing */
-.item-transition-leave-active {
-  transition: all 200ms ease-in;
-  position: absolute;
-  z-index: 0;
-}
-/* appear at / disappear to */
-.item-transition-enter,
-.item-transition-leave-to {
+.slide-enter {
+  transform: translateY(-20%);
   opacity: 0;
 }
+.slide-enter-to {
+  transform: translateX(0);
+}
+.slide-leave { transform: translateX(0) }
+.slide-leave-to { 
+  transform: translateY(-20%);
+  opacity: 0;
+}
+.slide-enter-active,
+.slide-leave-active { transition: all 500ms ease-in-out }
 #loader {
   position: relative;
   left: 50%;

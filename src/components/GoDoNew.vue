@@ -68,11 +68,13 @@
             </div>
             <ul class="list-group list-group-flush">
               <draggable :list="tasks" class="dragArea">
-                <li class="list-group-item" v-for="(task, index) in tasks">
-                  {{ task.name }} 
-                  <span class="float-right">{{getPrettyTime(task.duration)}}
-                  <a href="#" v-on:click="deleteTask(index)">Delete</a></span>
-                </li>
+                <transition-group name="slide-fade">
+                  <li class="list-group-item" v-for="(task, index) in tasks" v-bind:key="index">
+                    {{ task.name }} 
+                    <span class="float-right">{{getPrettyTime(task.duration)}}
+                    <a href="#" v-on:click.prevent="deleteTask(index)">Delete</a></span>
+                  </li>
+                </transition-group>
               </draggable>
             </ul>
           </div>
