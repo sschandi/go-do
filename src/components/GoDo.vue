@@ -35,9 +35,16 @@
         <div class="card current-task mt-2 mb-2">
           <div class="card-body">
             <h3>You are done!</h3>
-            <p>Estimated Time: {{ getPrettyTime(getEstimatedTime) }} Time Taken: {{ getPrettyTime(getActualTime) }}</p>
-            <p>Breaks Taken: {{ getBreakAmount }} for {{ getPrettyTime(getBreakTime) }}</p>
-            <p>Best Time:  Worst Time:</p>
+            <p>Estimated Time: 
+              <span class="blue">{{ getPrettyTime(getEstimatedTime) }}</span> | Time Taken: 
+              <span class="blue">{{ getPrettyTime(getActualTime) }}</span>
+            </p>
+            <p>Breaks Taken: 
+              <span class="blue">{{ getBreakAmount }}</span> for <span class="time-plus">{{ getPrettyTime(getBreakTime) }}</span>
+            </p>
+            <p>Largest Time Saved: <span class="time-minus">{{ getPrettyTime(getBiggestTimeSave) }}</span> | Largest Time Added: 
+              <span class="time-plus">{{ getPrettyTime(getBiggestTimeAddition) }}</span>
+            </p>
           </div>
         </div>
       </div>
@@ -354,6 +361,24 @@ export default {
       }
       return tempTime
     },
+    getBiggestTimeSave: function() {
+      let timeSave = 0
+      for (let i=0; i<this.completedTasks.length; i++) {
+        if ((this.completedTasks[i].duration - this.completedTasks[i].endTime) > timeSave) {
+          timeSave = this.completedTasks[i].duration - this.completedTasks[i].endTime
+        }
+      }
+      return timeSave
+    },
+    getBiggestTimeAddition: function() {
+      let timeAddition = 0
+      for (let i=0; i<this.completedTasks.length; i++) {
+        if ((this.completedTasks[i].addedTime) > timeAddition) {
+          timeAddition = this.completedTasks[i].addedTime
+        }
+      }
+      return timeAddition
+    },
     //not used requires alot of additional functions
     getEstimatedCompletion: function() {
       let timeObject = new Date()
@@ -380,5 +405,8 @@ export default {
 }
 .time-plus {
   color: var(--danger);
+}
+.blue {
+  color: var(--main-blue);
 }
 </style>
