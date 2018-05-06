@@ -11,16 +11,17 @@
       <div class="container text-center">
         <div class="row">
           <div class="col right-title-style d-none d-md-block">
-            <img src="../../static/gear-2.png" class="right-title-gear-1">
-            <img src="../../static/gear-1.png" class="right-title-gear-2">
+            <img src="/static/gear-2.png" class="right-title-gear-1">
+            <img src="/static/gear-1.png" class="right-title-gear-2">
           </div>
           <div class="col">
-            <h1 class="test">Go Do</h1>
+            <h1 class="test">GO <img src="/static/go_do_small.png" class="img-fluid d-md-none d-lg-inline"> DO</h1>
+            
             <h3>Tasklist App</h3>
           </div>
           <div class="col left-title-style d-none d-md-block">
-            <img src="../../static/gear-1.png" class="left-title-gear-1">
-            <img src="../../static/gear-2.png" class="left-title-gear-2">
+            <img src="/static/gear-1.png" class="left-title-gear-1">
+            <img src="/static/gear-2.png" class="left-title-gear-2">
           </div>
         </div>
         <!-- <div class="title-border-thick"></div>
@@ -28,7 +29,7 @@
       </div>
 
       <div id="home-callout" class="container text-center d-none d-md-block">
-        <img src="../../static/laptop.png" class="img-fluid">
+        <img src="/static/laptop.png" class="img-fluid">
         <div class="row justify-content-center callout-body">
           <div>
             <div class="card current-task mt-2 mb-2 text-center">
@@ -137,7 +138,7 @@ export default {
 
 <style>
 .test {
-  font-size: 5rem;
+  font-size: 3rem;
 }
 #home-page {
   background-color: var(--main-blue);

@@ -225,12 +225,12 @@ export default {
       this.currentTasks.splice(index, 1)
     },
     taskEnd: function () {
+      if ((this.currentTask.id == 'addedTime' || this.currentTask.id == 'break') && !this.currentTask.addedTime) {
+        this.currentTask.addedTime = this.currentTask.duration
+      }
       if (this.currentTasks.length > 0) {
         // console.log(this.$refs.currentCountdown)
         // console.log(this.$refs.currentCountdown.seconds)
-        if ((this.currentTask.id == 'addedTime' || this.currentTask.id == 'break') && !this.currentTask.addedTime) {
-          this.currentTask.addedTime = this.currentTask.duration
-        }
         this.playMusic()
         this.completedTasks.push(this.currentTask)
         this.currentTask = this.currentTasks[0]

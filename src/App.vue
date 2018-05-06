@@ -1,11 +1,18 @@
 <template>
   <div id="app">
     <Navbar/>
-    <router-view>
-
-    </router-view>
+    <transition name="route-slide">
+    <router-view></router-view>
+    </transition>
     <Footer/>
   </div>
+  <!-- service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write;
+    }
+  }
+} -->
 </template>
 
 <script>
@@ -121,7 +128,6 @@ a:hover, a:active {
 }
 .slide-fade-enter-to {
   transform: translateX(0);
-
 }
 .slide-fade-leave {
   transform: translateX(0);
@@ -132,5 +138,26 @@ a:hover, a:active {
 .slide-fade-enter-active,
 .slide-fade-leave-active {
   transition: all 500ms ease-in-out
+}
+.route-slide-enter {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+.route-slide-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+.route-slide-leave {
+  transform: translateX(0);
+}
+.route-slide-leave-to {
+  transform: translateX(100%);
+}
+.route-slide-enter-active {
+  transition: all 500ms ease-out;
+  transition-delay: 500ms;
+}
+.route-slide-leave-active {
+  transition: all 500ms ease-in;
 }
 </style>

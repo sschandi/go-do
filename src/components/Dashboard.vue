@@ -3,6 +3,7 @@
     <div class="title container-fluid text-center mb-3">
       <h1>Dashboard</h1>
     </div>
+
     <div class="container">
       <!-- <div id="loader"></div> -->
       <input type="text" v-model="search" class="form-control mb-1" placeholder="Search"/>

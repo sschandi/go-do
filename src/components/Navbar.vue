@@ -1,6 +1,6 @@
 <template>
 <nav class="navbar navbar-expand-md navbar-dark">
-  <router-link to="/" class="navbar-brand">Go Do</router-link>
+  <router-link to="/" class="navbar-brand"><img src="/static/go_do_small.png" height="30" alt="Go Do"></router-link>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -53,6 +53,9 @@ export default {
 </script>
 
 <style>
+.navbar {
+  z-index: 1;
+}
 .navbar-dark {
   background-color: var(--main-bg-dark);
 }
