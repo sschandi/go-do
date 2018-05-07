@@ -148,6 +148,10 @@ export default {
         this.errors.push("You can't have a 0 duration task.")
         this.error = true
       }
+      if (this.task.length > 20) {
+        this.errors.push("Task names cannot exceed 20 characters")
+        this.error = true
+      }
       if(!this.errors.length) {
         return true
       }
@@ -160,6 +164,10 @@ export default {
       }
       if (!this.tasks.length) {
         this.errors.push("You need atleast one task!")
+        this.error = true
+      }
+      if (this.listname.length > 20) {
+        this.errors.push("Task names cannot exceed 20 characters")
         this.error = true
       }
       if(!this.errors.length) {

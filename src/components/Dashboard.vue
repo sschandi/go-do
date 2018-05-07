@@ -98,13 +98,17 @@ export default {
 .slide-enter-to {
   transform: translateX(0);
 }
-.slide-leave { transform: translateX(0) }
+.slide-leave {
+  transform: translateX(0)
+}
 .slide-leave-to { 
   transform: translateY(-20%);
   opacity: 0;
 }
 .slide-enter-active,
-.slide-leave-active { transition: all 500ms ease-in-out }
+.slide-leave-active {
+  transition: all 500ms ease-in-out
+}
 #loader {
   position: relative;
   left: 50%;

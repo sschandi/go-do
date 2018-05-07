@@ -42,6 +42,7 @@ body {
 }
 h1 {
   color: var(--main-text-color);
+  font-family: 'Orbitron', sans-serif;
 }
 a:not([href]):not([tabindex]) {
   color: var(--main-blue);

@@ -138,6 +138,7 @@ export default {
 
 <style>
 .test {
+  font-family: 'Orbitron', sans-serif !important;
   font-size: 3rem;
 }
 #home-page {
@@ -188,7 +189,7 @@ export default {
   position: absolute;
   top: 55%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-45%, -50%);
 }
 .svg-content { 
 	display: inline-block;
