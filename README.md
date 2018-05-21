@@ -1,6 +1,22 @@
 # go-do
 
-> Personal task timer
+> Tasklist Web App
+
+> [Live here](https://godo.chandi.ca/) | [Demo here](https://godo.chandi.ca/demo)
+
+## Features
+
+> User registration via email
+
+> Create, Edit, Update, and Delete tasklists
+
+> Add breaks, extend, skip, end early, and rearrange tasks during run time
+
+## Stack
+
+> VueJS (Vue-cli + webpack) for reactive data
+
+> FireBase backend for authentication and storage of tasklists
 
 ## Build Setup
 
@@ -17,5 +33,3 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
