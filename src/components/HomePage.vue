@@ -1,31 +1,13 @@
 <template>
   <div id="home-page">
     <div class="container-fluid pt-4 pb-4">
-      <!-- <div id="loader"></div> -->
-      <!-- <div id="image"></div> -->
-      <!-- <div class="svg-container">
-        <object type="image/svg+xml" data="../../static/laptop.svg" 
-        width="70%" height="auto" class="svg-content">
-        </object>
-      </div> -->
       <div class="container text-center">
         <div class="row">
-          <div class="col right-title-style d-none d-md-block">
-            <img src="/static/gear-2.png" class="right-title-gear-1">
-            <img src="/static/gear-1.png" class="right-title-gear-2">
-          </div>
           <div class="col">
-            <h1 class="test">GO <img src="/static/go_do_small.png" class="img-fluid d-md-none d-lg-inline"> DO</h1>
-            
+            <h1 class="title-font">GO <img src="/static/go_do_small.png" class="img-fluid"> DO</h1>
             <h3>Tasklist App</h3>
           </div>
-          <div class="col left-title-style d-none d-md-block">
-            <img src="/static/gear-1.png" class="left-title-gear-1">
-            <img src="/static/gear-2.png" class="left-title-gear-2">
-          </div>
         </div>
-        <!-- <div class="title-border-thick"></div>
-        <div class="title-border-thin"></div> -->
       </div>
 
       <div id="home-callout" class="container text-center d-none d-md-block">
@@ -75,7 +57,7 @@
 
       <div class="d-md-none">
         <div class="row justify-content-center">
-                      <div class="card current-task mt-2 mb-2 text-center">
+          <div class="card homepage-task mt-2 mb-2 text-center">
               <div class="card-body">
                 <h3>Current Task: Register/Login</h3>
                 <vue-countdown :time="500000" :interval="100" tag="p">
@@ -104,7 +86,28 @@
         </div>
       </div>
 
-
+    </div>
+    <div id="features" class="container-fluid p-4">
+      <div class="container">
+      <div class="row align-items-center pb-4">
+        <div class="col-md-6 create">
+          <h1 class="title-font">Create and Run Tasklists</h1>
+          <p>Easily add and run tasklists with runtime rearrangements, breaks, and time extensions.</p>
+        </div>
+        <div class="col-md-6">
+          <img class="img-fluid img-shadow" src="/static/add-list.gif">
+        </div>
+      </div>
+        <div class="row align-items-center pt-4">
+          <div class="col-md-6 stats">
+            <h1 class="title-font">Summary Statistics</h1>
+            <p>Shows where you saved or lost time, so you can adjust your lists accordingly.</p>
+          </div>
+          <div class="col-md-6">
+            <img class="img-fluid img-shadow" src="/static/completed-small.PNG">
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -137,9 +140,30 @@ export default {
 </script>
 
 <style>
-.test {
-  font-family: 'Orbitron', sans-serif !important;
-  font-size: 3rem;
+.create:after {
+  content: "";
+  width: 8px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -32px;
+  height: 200px;
+  background-color: var(--main-blue);
+}
+.stats h1, .stats p, .create h1, .create p{
+  padding: 20px;
+}
+.stats:after {
+  content: "";
+  width: 8px;
+  position: absolute;
+  bottom: 0;
+  right: 32px;
+  height: 200px;
+  background-color: var(--main-bg-dark);
+}
+.img-shadow {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
 #home-page {
   background-color: var(--main-blue);
@@ -175,10 +199,10 @@ export default {
   animation: spin 16s linear infinite;
 }
 .title-border-thick {
-  border-bottom: 6px solid var(--main-text-color);
+  border-bottom: 6px solid var(--main-blue);
 }
 .title-border-thin {
-  border-bottom: 2px solid var(--main-text-color);
+  border-bottom: 2px solid var(--main-blue);
   padding: 2px;
 }
 #home-callout {
@@ -191,56 +215,14 @@ export default {
   left: 50%;
   transform: translate(-45%, -50%);
 }
-.svg-content { 
-	display: inline-block;
-	position: absolute;
-	top: 80px;
-	right: 0;
+.homepage-task {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
-#image {
-  background-image: url("../../static/laptop.svg");
-  background-repeat: no-repeat;
-  width: 80vw;
-  height: 80vh;
-  background-position: right bottom;
+.upcoming-tasks {
+  border-top: var(--danger) 2px solid;
 }
-#loader {
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  margin: 0 0 0 calc(25vw - 179px);
-  border: 3px solid transparent;
-  border-top-color: #3498db;
-  border-radius: 50%;
-  -webkit-animation: spin 8s linear infinite;
-  animation: spin 8s linear infinite;
-  z-index: -1;
-}
-#loader:before {
-  content: "";
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  right: 5px;
-  bottom: 5px;
-  border: 3px solid transparent;
-  border-top-color: #e74c3c;
-  border-radius: 50%;
-  -webkit-animation: spin 3s linear infinite;
-  animation: spin 3s linear infinite;
-}
-#loader:after {
-  content: "";
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  right: 15px;
-  bottom: 15px;
-  border: 3px solid transparent;
-  border-top-color: #f9c922;
-  border-radius: 50%;
-  -webkit-animation: spin 1.5s linear infinite;
-  animation: spin 1.5s linear infinite;
+#features {
+  background-color: var(--main-bg-color);
 }
 @-webkit-keyframes spin {
   0%   {

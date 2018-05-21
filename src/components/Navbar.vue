@@ -15,6 +15,9 @@
       <li v-if="!isLoggedIn" class="nav-item">
         <router-link to="/register" class="nav-link">Register</router-link>
       </li>
+      <li v-if="!isLoggedIn" class="nav-item">
+        <router-link to="/demo" class="nav-link">Demo</router-link>
+      </li>
     </ul>
     <ul class="navbar-nav ml-auto">
       <router-link v-if="!isLoggedIn" to="/login">Login</router-link>
@@ -57,6 +60,7 @@ export default {
   z-index: 1;
 }
 .navbar-dark {
+  background-color: #222831;
   background-color: var(--main-bg-dark);
 }
 </style>

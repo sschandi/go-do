@@ -1,18 +1,13 @@
 <template>
   <div id="app">
     <Navbar/>
+    <div class="main-content">
     <transition name="route-slide">
-    <router-view></router-view>
+      <router-view></router-view>
     </transition>
+    </div>
     <Footer/>
   </div>
-  <!-- service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write;
-    }
-  }
-} -->
 </template>
 
 <script>
@@ -42,7 +37,12 @@ body {
 }
 h1 {
   color: var(--main-text-color);
-  font-family: 'Orbitron', sans-serif;
+}
+.main-content{
+  min-height: 70vh;
+  min-height: -webkit-calc(100vh - 139px);
+  min-height: -moz-calc(100vh - 139px);
+  min-height: calc(100vh - 139px);
 }
 a:not([href]):not([tabindex]) {
   color: var(--main-blue);
@@ -69,18 +69,13 @@ input[type=password], input[type=password]:focus {
   background-color: var(--main-bg-dark);
   padding: 1em;
 }
+.title-font {
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 3rem;
+}
 .card {
   background-color: var(--main-bg-dark);
   border-top: var(--main-blue) 2px solid;
-}
-.completed-tasks {
-  border-top: var(--success) 2px solid;
-}
-.current-task {
-  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-}
-.upcoming-tasks {
-  border-top: var(--danger) 2px solid;
 }
 .list-group-item {
   background-color: var(--main-bg-dark);

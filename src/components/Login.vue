@@ -1,6 +1,9 @@
 <template>
+<div id="login">
+  <div class="title title-font container-fluid text-center mb-3">
+    <h1>Log In</h1>
+  </div>
   <div class="container text-center">
-    <h1>Login</h1>
     <div class="row justify-content-center">
       <div class="col-md-6">
         <form>
@@ -15,6 +18,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -33,7 +37,6 @@ export default {
     login: function(e) {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password)
         .then(user => {
-          alert(`You are logged in as ${user.email}`)
           this.$router.go({ name: 'dashboard'})
         },
         err => {

@@ -1,6 +1,6 @@
 <template>
   <div id="dashboard">
-    <div class="title container-fluid text-center mb-3">
+    <div class="title title-font container-fluid text-center mb-3">
       <h1>Dashboard</h1>
     </div>
 

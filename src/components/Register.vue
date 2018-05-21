@@ -1,6 +1,9 @@
 <template>
-  <div class="container text-center">
+<div id="register">
+  <div class="title title-font container-fluid text-center mb-3">
     <h1>Register</h1>
+  </div>
+  <div class="container text-center">
     <div class="row justify-content-center">
       <div class="col-md-6">
         <form>
@@ -15,6 +18,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -33,7 +37,6 @@ export default {
     register: function(e) {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
         .then(user => {
-          alert(`Account created for ${user.email}`)
           this.$router.go({ name: 'dashboard'})
         },
         err => {

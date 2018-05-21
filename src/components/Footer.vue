@@ -15,6 +15,7 @@ export default {
 <style>
 .footer {
   line-height: 80px;
+  background-color: var(--main-bg-dark);
 }
 .footer p {
   margin: 0;

@@ -1,7 +1,7 @@
 <template>
 <div id="go-do">
   <div class="title container-fluid text-center mb-3">
-    <h1 class="text-center">{{listname}} <span class="edit"><router-link v-bind:to="{name: 'go-do-edit', params: {tasklist: this.$route.params.tasklist}}" >Edit</router-link></span></h1>
+    <h1 class="text-center title-font">{{listname}} <span class="edit"><router-link v-bind:to="{name: 'go-do-edit', params: {tasklist: this.$route.params.tasklist}}" >Edit</router-link></span></h1>
     <button class="btn btn-main" v-if="!tasklistDone" v-on:click="countdown">
       <template v-if="counting">Pause</template>
       <template v-else>Start</template>
@@ -105,7 +105,7 @@
                   Gimme More Time
                 </button>
                 <div class="dropdown-menu" aria-labelledby="add-time">
-                  <a href="#" class="dropdown-item" v-on:click.prevent="addTime(5)">1 Min.</a>
+                  <a href="#" class="dropdown-item" v-on:click.prevent="addTime(60)">1 Min.</a>
                   <a href="#" class="dropdown-item" v-on:click.prevent="addTime(300)">5 Min.</a>
                   <a href="#" class="dropdown-item" v-on:click.prevent="addTime(600)">10 Min.</a>
                 </div>
@@ -117,7 +117,7 @@
                   Take Break Next
                 </button>
                 <div class="dropdown-menu" aria-labelledby="break">
-                  <a href="#" class="dropdown-item" v-on:click.prevent="addBreak(5)">1 Min.</a>
+                  <a href="#" class="dropdown-item" v-on:click.prevent="addBreak(60)">1 Min.</a>
                   <a href="#" class="dropdown-item" v-on:click.prevent="addBreak(300)">5 Min.</a>
                   <a href="#" class="dropdown-item" v-on:click.prevent="addBreak(600)">10 Min.</a>
                 </div>
@@ -408,5 +408,17 @@ export default {
 }
 .blue {
   color: var(--main-blue);
+}
+.completed-tasks {
+  border-top: var(--success) 2px solid;
+}
+.current-task {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+.current-task .btn {
+  margin-bottom: 1em;
+}
+.upcoming-tasks {
+  border-top: var(--danger) 2px solid;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div id="go-do-edit">
     <div class="title container-fluid text-center mb-3">
-      <h1>Edit Tasklist <span class="edit"><a href="#" v-on:click.prevent="deleteTasklist">Delete</a></span></h1>
+      <h1 class="title-font">Edit Tasklist <span class="edit"><a href="#" v-on:click.prevent="deleteTasklist">Delete</a></span></h1>
       <div class="container">
         <input type="text" class="form-control form-control-lg" v-model="listname" placeholder="Enter tasklist name">
       </div>

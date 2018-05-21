@@ -1,13 +1,12 @@
 <template>
 <div id="go-do-demo">
   <div class="title container-fluid text-center mb-3">
-    <button class="btn btn-main" v-on:click="startDemo">Demo</button>
-    <h1 data-step="1" data-intro="Welcome to the demo" class="text-center">{{listname}} <span class="edit"><router-link v-bind:to="{name: 'go-do-edit', params: {tasklist: this.$route.params.tasklist}}" >Edit</router-link></span></h1>
-    <button class="btn btn-main" @click="countdown">
+    <h1 class="text-center title-font">{{listname}}</h1>
+    <button class="btn btn-main" v-if="!tasklistDone" v-on:click="countdown">
       <template v-if="counting">Pause</template>
       <template v-else>Start</template>
     </button>
-    <button class="btn btn-danger" v-on:click="restart">Restart</button>
+    <button v-if="!counting" class="btn btn-danger" v-on:click="restart">Restart</button>
     <div class="container">
           <vue-countdown v-bind:auto-start="false" ref="totalCountdown" :time="getTotalTime" :interval="100" tag="p">
       <template slot-scope="props">
@@ -29,7 +28,30 @@
     </vue-countdown>
     </div>
   </div>
-  <div data-step="2" data-intro="yowasz" class="container">
+
+  <div class="container">
+    <div v-if="tasklistDone" class="row justify-content-center text-center">
+      <div class="col-md-8">
+        <div class="card current-task mt-2 mb-2">
+          <div class="card-body">
+            <h3>You are done!</h3>
+            <p>Estimated Time: 
+              <span class="blue">{{ getPrettyTime(getEstimatedTime) }}</span> | Time Taken: 
+              <span class="blue">{{ getPrettyTime(getActualTime) }}</span>
+            </p>
+            <p>Breaks Taken: 
+              <span class="blue">{{ getBreakAmount }}</span> for <span class="time-plus">{{ getPrettyTime(getBreakTime) }}</span>
+            </p>
+            <p>Largest Time Saved: <span class="time-minus">{{ getPrettyTime(getBiggestTimeSave) }}</span> | Largest Time Added: 
+              <span class="time-plus">{{ getPrettyTime(getBiggestTimeAddition) }}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
     <div v-if="completedTasks.length > 0" class="row justify-content-center">
       <div class="col-md-8">
         <div class="card completed-tasks mt-2 mb-2">
@@ -39,19 +61,23 @@
           <ul class="list-group list-group-flush">
             <li class="list-group-item" v-for="task in completedTasks">
               {{ task.name }} 
-                <span class="float-right">{{getPrettyTime(task.duration)}}</span>
+              <div class="float-right">
+                <template v-if="task.endTime"><span class="time-minus">-{{getPrettyTime(task.duration-task.endTime)}}</span> {{getPrettyTime(task.endTime)}}</template>
+                <template v-else-if="task.addedTime"><span class="time-plus">+{{getPrettyTime(task.addedTime)}}</span></template>
+                <template v-else>{{getPrettyTime(task.duration)}}</template>
+              </div>
             </li>
           </ul>
         </div>
       </div>
     </div>
 
-  <div class="row justify-content-center text-center">
+  <div v-if="!tasklistDone" class="row justify-content-center text-center">
     <div class="col-md-8">
         <div class="card current-task mt-2 mb-2">
           <div class="card-body">
           <h3>Current Task: {{ currentTask.name }}</h3>
-          <vue-countdown v-bind:auto-start="false" ref="currentCountdown" :time="getCurrentTaskTime" :interval="100" @countdownend="taskEnd" tag="p">
+          <vue-countdown v-bind:auto-start="false" ref="currentCountdown" :time="getCurrentTaskTime" :interval="100" v-on:countdownend="taskEnd()" tag="p">
             <template slot-scope="props">
               <div class="row justify-content-center">
                 <div class="col">
@@ -69,7 +95,35 @@
               </div>
             </template>
           </vue-countdown>
-           <button class="btn btn-main" v-on:click="addBreak">5 Min. Break next</button>
+          <div v-if="counting" class="row text-center">
+            <div class="col pull-left">
+              <button class="btn btn-main" v-on:click="taskEndEarly()">I'm Done</button>
+            </div>
+            <div class="col">
+              <div class="dropdown">
+                <button class="btn btn-main dropdown-toggle" type="button" id="add-time" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Gimme More Time
+                </button>
+                <div class="dropdown-menu" aria-labelledby="add-time">
+                  <a href="#" class="dropdown-item" v-on:click.prevent="addTime(60)">1 Min.</a>
+                  <a href="#" class="dropdown-item" v-on:click.prevent="addTime(300)">5 Min.</a>
+                  <a href="#" class="dropdown-item" v-on:click.prevent="addTime(600)">10 Min.</a>
+                </div>
+              </div>
+            </div>
+            <div class="col pull-right">
+              <div class="dropdown">
+                <button class="btn btn-main dropdown-toggle" type="button" id="break" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Take Break Next
+                </button>
+                <div class="dropdown-menu" aria-labelledby="break">
+                  <a href="#" class="dropdown-item" v-on:click.prevent="addBreak(60)">1 Min.</a>
+                  <a href="#" class="dropdown-item" v-on:click.prevent="addBreak(300)">5 Min.</a>
+                  <a href="#" class="dropdown-item" v-on:click.prevent="addBreak(600)">10 Min.</a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -83,10 +137,10 @@
           </div>
           <ul class="list-group list-group-flush">
             <draggable :list="currentTasks" class="dragArea">
-              <li class="list-group-item" v-for="(task, index) in currentTasks" :style="{'background-color': checkBreak(task.name)}">
+              <li class="list-group-item" v-for="(task, index) in currentTasks" :style="{'background-color': checkBreak(task.id)}">
                 {{ task.name }} 
                 <span class="float-right">{{getPrettyTime(task.duration)}}
-                <a href="#" class="" v-on:click="deleteTask(index)">Skip</a></span>
+                <a href="#" class="" v-on:click.prevent="deleteTask(index)">Skip</a></span>
               </li>
             </draggable>
           </ul>
@@ -96,6 +150,7 @@
 
   </div>
 </div>
+
 </template>
 
 <script>
@@ -110,7 +165,7 @@ export default {
   },
   data () {
     return {
-      listname: 'Sample Tasklist',
+      listname: 'Demo Tasklist',
       counting: false,
       tasks: [
         {duration: 5, name: 'task'},
@@ -122,7 +177,11 @@ export default {
       ],
       currentTasks: [],
       completedTasks: [],
-      currentTask: ''
+      currentTask: '',
+      tasklistDone: false,
+      audio: new Audio(require('../assets/ring.mp3')),
+      demo: ['select', 'current-task'],
+      showDemo: false
     }
   },
   created () {
@@ -130,16 +189,6 @@ export default {
     this.currentTask = this.currentTasks[0]
     this.currentTasks.splice(0,1)
   },
-  // beforeRouteEnter (to, from, next) {
-  //   let uid = firebase.auth().currentUser.uid
-  //   db.collection('users').doc(uid).collection('tasklists').doc(to.params.tasklist).get().then(function(doc) {
-  //     if (doc.exists) {
-  //       console.log("doc: ", doc.data())
-  //     } else {
-  //       console.log("no doc")
-  //     }
-  //   })
-  // },
   watch: {
     '$route': 'fetchData'
   },
@@ -154,15 +203,19 @@ export default {
       if(this.counting == false) {
         this.pause()
       } else {
-        this.$refs.currentCountdown.start()
-        this.$refs.totalCountdown.start()
+        this.start()
       }
     },
     deleteTask: function(index) {
       this.currentTasks.splice(index, 1)
     },
     taskEnd: function () {
+      if ((this.currentTask.id == 'addedTime' || this.currentTask.id == 'break') && !this.currentTask.addedTime) {
+        this.currentTask.addedTime = this.currentTask.duration
+      }
       if (this.currentTasks.length > 0) {
+        // console.log(this.$refs.currentCountdown)
+        // console.log(this.$refs.currentCountdown.seconds)
         this.playMusic()
         this.completedTasks.push(this.currentTask)
         this.currentTask = this.currentTasks[0]
@@ -171,28 +224,55 @@ export default {
         this.$refs.currentCountdown.start()
       } else {
         this.completedTasks.push(this.currentTask)
-        this.currentTask = ''
         this.counting = false
+        this.pause()
+        this.tasklistDone = true
         this.playMusic()
       }
     },
+    taskEndEarly: function() {
+      if (this.currentTask.id == 'addedTime' || this.currentTask.id == 'break') {
+        this.currentTask.addedTime = this.currentTask.duration - this.$refs.currentCountdown.totalSeconds
+        this.taskEnd()
+      } else {
+        this.currentTask.endTime = this.currentTask.duration - this.$refs.currentCountdown.totalSeconds
+        this.taskEnd()
+      }
+    },
     restart: function() {
-      this.counting = false
+      this.removeEndTimes()
+      if (!this.tasklistDone) {
+        this.$refs.currentCountdown.init()
+        this.$refs.totalCountdown.init()
+      }
       this.currentTasks = this.tasks.slice(0)
       this.currentTask = this.currentTasks[0]
       this.currentTasks.splice(0,1)
       this.completedTasks = []
+      this.tasklistDone = false
+    },
+    removeEndTimes: function() {
+      for(let i=0; i<this.tasks.length; i++) {
+        this.tasks[i].endTime = null;
+      }
     },
     pause: function() {
       this.$refs.currentCountdown.pause()
       this.$refs.totalCountdown.pause()
     },
-    addBreak: function() {
-      this.currentTasks.unshift({name: "Break", duration: 300})
+    start: function() {
+      this.$refs.currentCountdown.start()
+      this.$refs.totalCountdown.start()
+    },
+    addBreak: function(duration) {
+      this.currentTasks.unshift({name: 'Break', duration: duration, id: 'break'})
+    },
+    addTime: function(duration) {
+      this.currentTasks.unshift({name: 'Extra Time: ' + this.currentTask.name, duration: duration, id: 'addedTime'})
     },
     playMusic: function() {
-      let audio = new Audio(require('../assets/beep.mp3'))
-      audio.play()
+      // let audio = new Audio(require('../assets/beep.mp3'))
+      this.audio.play()
     },
     getPrettyTime: function(duration) {
       let h = Math.floor(duration / 3600)
@@ -200,15 +280,12 @@ export default {
       let s = Math.floor(duration % 3600 % 60)
       return ('0' + h).slice(-2) + ":" + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2)
     },
-    checkBreak: function(name) {
-      if (name == 'Break') {
+    checkBreak: function(id) {
+      if (id == 'break') {
         return '#00ADB5'
       } else {
         return ''
       }
-    },
-    startDemo: function() {
-      introJs().start()
     }
   },
   computed: {
@@ -231,6 +308,62 @@ export default {
         return 0
       }
     },
+    getEstimatedTime: function() {
+      let tempTime = 0
+      for (let i=0; i<this.completedTasks.length; i++) {
+        if (!this.completedTasks[i].id) {
+          tempTime += this.completedTasks[i].duration
+        }
+      }
+      return tempTime
+    },
+    getActualTime: function() {
+      let tempTime = this.getEstimatedTime
+      for (let i=0; i<this.completedTasks.length; i++) {
+         if (this.completedTasks[i].endTime) {
+          tempTime -= (this.completedTasks[i].duration- this.completedTasks[i].endTime)
+        } else if (this.completedTasks[i].addedTime) {
+          tempTime += this.completedTasks[i].addedTime
+        }
+      }
+      return tempTime
+    },
+    getBreakAmount: function() {
+      let breakAmount = 0
+      for (let i=0; i<this.completedTasks.length; i++) {
+        if (this.completedTasks[i].id == 'break') {
+           breakAmount ++
+        }
+      }
+      return breakAmount
+    },
+    getBreakTime: function() {
+      let tempTime = 0
+      for (let i=0; i<this.completedTasks.length; i++) {
+        if (this.completedTasks[i].id == 'break') {
+           tempTime += this.completedTasks[i].addedTime
+        }
+      }
+      return tempTime
+    },
+    getBiggestTimeSave: function() {
+      let timeSave = 0
+      for (let i=0; i<this.completedTasks.length; i++) {
+        if ((this.completedTasks[i].duration - this.completedTasks[i].endTime) > timeSave) {
+          timeSave = this.completedTasks[i].duration - this.completedTasks[i].endTime
+        }
+      }
+      return timeSave
+    },
+    getBiggestTimeAddition: function() {
+      let timeAddition = 0
+      for (let i=0; i<this.completedTasks.length; i++) {
+        if ((this.completedTasks[i].addedTime) > timeAddition) {
+          timeAddition = this.completedTasks[i].addedTime
+        }
+      }
+      return timeAddition
+    },
     //not used requires alot of additional functions
     getEstimatedCompletion: function() {
       let timeObject = new Date()
@@ -244,15 +377,20 @@ export default {
 </script>
 
 <style>
-.completed-tasks {
-  border-top: var(--success) 2px solid;
+/* Demo Specific Styles */
+#demo-overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 100;
+  cursor: pointer;
 }
-.current-task {
-  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-}
-.upcoming-tasks {
-  border-top: var(--danger) 2px solid;
-}
+/* Go Do Styles */
 .block {
   display: flex;
   flex-direction: column;
@@ -260,5 +398,26 @@ export default {
 }
 .edit {
   font-size: 1rem;
+}
+.time-minus {
+  color: var(--success);
+}
+.time-plus {
+  color: var(--danger);
+}
+.blue {
+  color: var(--main-blue);
+}
+.completed-tasks {
+  border-top: var(--success) 2px solid;
+}
+.current-task {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+.current-task .btn {
+  margin-bottom: 1em;
+}
+.upcoming-tasks {
+  border-top: var(--danger) 2px solid;
 }
 </style>

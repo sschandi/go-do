@@ -1,7 +1,11 @@
 <template>
   <div id="page-not-found">
-    <div class="container">
-      <h1>Error: This page doesn't exist.</h1>
+    <div class="title title-font container-fluid text-center mb-3">
+      <h1>Error</h1>
+    </div>
+    <div class="container text-center">
+      <img src="/static/go_do_small.png" class="img-fluid">
+      <h1>This page doesn't exist :(</h1>
     </div>
   </div>
 </template>
